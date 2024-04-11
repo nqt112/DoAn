@@ -1,0 +1,31 @@
+{
+  "name": "doantn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nqt112/DoAn.git"
+  },
+  "author": "nqt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nqt112/DoAn/issues"
+  },
+  "homepage": "https://github.com/nqt112/DoAn#readme",
+  "dependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.4",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.24.4",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0"
+  }
+}
