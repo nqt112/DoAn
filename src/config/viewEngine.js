@@ -1,7 +1,6 @@
 import express from 'express';
 
 
-
 const configViewengine = (app) => {
     app.use(express.static('./src/public'))
     //config view engine
