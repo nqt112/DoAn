@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
+  <link rel="stylesheet" href="/css/styles.min.css" />
+  <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
+
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <%- include('../_partialView/asideAdmin.ejs') %>
+
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+    <%- include('../_partialView/headerAdmin.ejs') %>
+      
+      <!--  Header End -->
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Chỉnh sửa loại phòng</h5>
+              <div class="card">
+                <div class="card-body">
+
+                  <form action="/admin/category/update-category/<%= category.id%>" method="post">
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Tên loại phòng</label>
+                      <input type="text" value="<%= category.name %>" class="form-control" id="exampleInputEmail1"  name ="name" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3"> 
+                      <label for="exampleInputPassword1" class="form-label">square</label>
+                      <input type="text" value="<%= category.square %>" class="form-control" name= "square">
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">numberOfPeople</label>
+                      <input type="text" value="<%= category.numberOfPeople %>" class="form-control" name= "numberOfPeople">
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">typeOfBed</label>
+                      <input type="text" value="<%= category.typeOfBed %>" class="form-control" name= "typeOfBed">
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Price</label>
+                      <input type="text" value="<%= category.price %>" class="form-control" name= "price">
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Description</label>
+                      <input type="text" value="<%= category.description %>" class="form-control" name= "description">
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Image</label>
+                      <input type="file" value="<%= category.image %>" class="form-control" name= "image">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                  <a href="/admin/category/categorylist"> <button type="button" class="btn btn-outline-danger">Back</button></a>
+                  </form>
+                  <div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sidebarmenu.js"></script>
+  <script src="/js/app.min.js"></script>
+  <script src="/libs/simplebar/dist/simplebar.js"></script>
+</body>
+
+</html>
