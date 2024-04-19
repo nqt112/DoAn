@@ -20,7 +20,10 @@ let getUserList = async(req, res) => {
     return res.render('./user/userlist.ejs',{userList: userList});
 }
 let createNewUser = async (req, res) => {
-    let { username, password, fullname, email, phone, role } = req.body;
+    let { username, password, fullname, email, phone, role ,createdAt} = req.body;
+    // if(!username || !password || !fullname || !email || !phone || !role) {
+    //     res.send('Vui lòng nhập đầy đủ thông tin')
+    // }
     try{
         await db.User.create({
             username: username,
@@ -28,7 +31,8 @@ let createNewUser = async (req, res) => {
             fullname: fullname,
             email: email,
             phone: phone,
-            role: role
+            role: role,
+            createdAt: createdAt
         })
     }catch (err) {
         console.log(err)

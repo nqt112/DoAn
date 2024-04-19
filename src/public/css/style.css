@@ -2302,3 +2302,10 @@ ul, ol {
 		margin-bottom: 10px;
 	}
 }
+
+.table td {
+    max-width: 200px; /* Độ rộng tối đa của cột */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

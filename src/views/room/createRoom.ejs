@@ -29,40 +29,33 @@
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-3">Thêm mới tài khoản</h5>
+              <h5 class="card-title fw-semibold mb-3">Thêm mới phòng</h5>
               <div class="card">
                 <div class="card-body">
-                  <form action="/admin/user/create-new-user" method="post">
+                  <form action="/admin/room/create-new-room" method="post">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
-                      <input type="text" class="form-control" id="exampleInputEmail1" name ="username" aria-describedby="emailHelp" required>
+                      <label for="exampleInputEmail1" class="form-label">Tên loại phòng</label>
+                      <!-- <input type="number" class="form-control" name ="roomCategoryId" aria-describedby="emailHelp" required> -->
+                      <select class="form-select" name="roomCategoryId">
+                        <% categoryList.forEach((category) => { %>
+                          <option value="<%= category.id %>"><%= category.name %></option>
+                        <% }); %>
+                    </select>
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
-                      <input type="password" class="form-control" name= "password" required>
+                      <label for="exampleInputPassword1" class="form-label">Tên phòng</label>
+                      <input type="text" class="form-control" name= "roomNumber" required>
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Họ & Tên</label>
-                      <input type="text" class="form-control" name= "fullname" required>
+                      <label for="exampleInputPassword1" class="form-label">Tầng</label>
+                      <input type="number" class="form-control" name= "floor" required>
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Email</label>
-                      <input type="email" class="form-control" name= "email" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Số điện thoại</label>
-                      <input type="number" class="form-control" name= "phone" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Vai trò</label>
-                      <!-- <input type="number" class="form-control" name= "role" required> -->
-                      <select class="form-select" name="role">
-                        <option value="0">Người quản trị</option>
-                        <option value="1">Người dùng</option>
-                      </select>
+                      <label for="exampleInputPassword1" class="form-label">Trạng thái</label>
+                      <input type="text" class="form-control" name= "status" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Lưu</button>
-                  <a href="/admin/user/userlist"> <button type="button" class="btn btn-outline-danger">Quay lại</button></a>
+                  <a href="/admin/room/roomlist"> <button type="button" class="btn btn-outline-danger">Quay lại</button></a>
                   </form>
                   <div>
                   </div>

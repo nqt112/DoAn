@@ -1,8 +1,9 @@
 import { where } from 'sequelize';
 import db from '../models/index'
 import multer from 'multer';
-
-
+import path from 'path';
+import appRoot from 'app-root-path';
+const fs = require('fs')
 
 let getCreateCategoryPage = async (req, res) => {
     return res.render('./category/createCategory.ejs');
@@ -23,7 +24,7 @@ let getCategoryList = async(req, res) => {
     return res.render('./category/categoryList',{categoryList: categoryList});
 }
 let createNewCategory = async (req, res) => {
-    let image = req.file.filename;
+    let image = req.file? req.file.filename : null;
     let { name, square, numberOfPeople, typeOfBed, price, description } = req.body;
     try{
         await db.Room_category.create({
@@ -38,6 +39,7 @@ let createNewCategory = async (req, res) => {
     }catch (err) {
         console.log(err)
     }
+
     return res.redirect('/admin/category/categoryList')
 }
 let deleteCategory = async (req, res) => {
@@ -53,28 +55,71 @@ let deleteCategory = async (req, res) => {
     }
     return res.redirect('/admin/category/categoryList') 
 }
+// let updateCategory = async (req, res) => {
+//     let image = req.file? req.file.filename : null; 
+//     let id = req.params.id;
+//     let { name, square, numberOfPeople, typeOfBed, price, description } = req.body;
+//     try{
+//         await db.Room_category.update({
+//         name: name,
+//          square: square,
+//          numberOfPeople: numberOfPeople,
+//          typeOfBed: typeOfBed,
+//          price: price,
+//          description:description,
+//          image: image
+//         },{
+//             where: {
+//                 id: id
+//             }
+//         })
+//     }catch (err) {
+//         console.log(err)
+//     }
+//     return res.redirect('/admin/category/categoryList')
+// }
 let updateCategory = async (req, res) => {
+    let image = req.file? req.file.filename : null;
     let id = req.params.id;
-    let { name, square, numberOfPeople, typeOfBed, price, description, image } = req.body;
-    try{
-        await db.Room_category.update({
-        name: name,
-         square: square,
-         numberOfPeople: numberOfPeople,
-         typeOfBed: typeOfBed,
-         price: price,
-         description:description,
-         image: image
-        },{
-            where: {
-                id: id
-            }
-        })
-    }catch (err) {
-        console.log(err)
+    let { name, square, numberOfPeople, typeOfBed, price, description } = req.body;
+   
+    try {
+        // Nếu có file hình ảnh mới được upload
+        if (image) {
+            // Cập nhật cơ sở dữ liệu với hình ảnh mới
+            await db.Room_category.update({
+                name: name,
+                square: square,
+                numberOfPeople: numberOfPeople,
+                typeOfBed: typeOfBed,
+                price: price,
+                description:description,
+                image : image
+            }, {
+                where: {
+                    id: id
+                }
+            })
+        } else {
+            // Nếu không có file hình ảnh mới được upload, giữ lại hình ảnh cũ
+            await db.Room_category.update({
+                name: name,
+                square: square,
+                numberOfPeople: numberOfPeople,
+                typeOfBed: typeOfBed,
+                price: price,
+                description:description,
+            }, {
+                where: {
+                    id: id
+                }
+            })
+        }
+    } catch (err) {
+        console.log(err);
     }
     return res.redirect('/admin/category/categoryList')
-}
+};
 let handleUploadFile = (req, res) => {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);

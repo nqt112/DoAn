@@ -29,37 +29,42 @@
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Forms</h5>
+              <h5 class="card-title fw-semibold mb-3">Chỉnh sửa tài khoản</h5>
               <div class="card">
                 <div class="card-body">
 
                   <form action="/admin/user/update-user/<%= user.id%>" method="post">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Username</label>
-                      <input type="text" value="<%= user.username %>" class="form-control" id="exampleInputEmail1"  name ="username" aria-describedby="emailHelp">
+                      <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
+                      <input type="text" value="<%= user.username %>" required  class="form-control" id="exampleInputEmail1"  name ="username" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3"> 
-                      <label for="exampleInputPassword1" class="form-label">Password</label>
-                      <input type="password" value="<%= user.password %>" class="form-control" name= "password">
+                      <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
+                      <input type="password" value="<%= user.password %>" required class="form-control" name= "password">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">FullName</label>
-                      <input type="text" value="<%= user.fullname %>" class="form-control" name= "fullname">
+                      <label for="exampleInputPassword1" class="form-label">Họ & Tên</label>
+                      <input type="text" value="<%= user.fullname %>" required class="form-control" name= "fullname">
                     </div>
                     <div class="mb-3">
                       <label for="exampleInputPassword1" class="form-label">Email</label>
-                      <input type="email" value="<%= user.email %>" class="form-control" name= "email">
+                      <input type="email" value="<%= user.email %>" class="form-control" required name= "email">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Phone</label>
-                      <input type="text" value="<%= user.phone %>" class="form-control" name= "phone">
+                      <label for="exampleInputPassword1" class="form-label">Số điện thoại</label>
+                      <input type="text" value="<%= user.phone %>" class="form-control" required name= "phone">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Role</label>
-                      <input type="text" value="<%= user.role %>" class="form-control" name= "role">
+                      <label for="exampleInputPassword1" class="form-label">Vai trò</label>
+                      <!-- <input type="text" value="<%= user.role %>" class="form-control" required name= "role"> -->
+                      <select class="form-select" name="role" required>
+                        
+                        <option value="0">Người quản trị</option>
+                        <option value="1">Người dùng</option>
+                      </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                  <a href="/admin/user/userlist"> <button type="button" class="btn btn-outline-danger">Back</button></a>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                  <a href="/admin/user/userlist"> <button type="button" class="btn btn-outline-danger">Quay lại</button></a>
                   </form>
                   <div>
                   </div>

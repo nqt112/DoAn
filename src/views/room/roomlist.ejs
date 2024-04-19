@@ -27,44 +27,43 @@
       <!--  Header End -->
       <div class="container-fluid">
         <div class="container-fluid">
-          <h3>Quản lý tài khoản</h3>
+          <h3>Quản lý phòng</h3>
           <div class="card">
             <div class="card-body">
-              <a href="/admin/user/createUser"> <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button></a>
+              <a href="/admin/room/createRoom"> <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button></a>
                
 
                <div class=" table-responsive">
                  <table class="table table-hover">
                    <thead>
                      <tr class="table-active">
-                       <th scope="col">#</th>
-                       <th scope="col">Tên tài khoản</th>
-                       <th scope="col">Họ & Tên</th>
-                       <th scope="col">Email</th>
-                       <th scope="col">Số điện thoại</th>
-                       <!-- <th scope="col">Role</th> -->
+                       <th scope="col">STT</th>
+                       <th scope="col">Tên loại phòng</th>
+                       <th scope="col">Tên phòng</th>
+                       <th scope="col">Tầng</th>
+                       <th scope="col">Trạng thái</th>
                        <th scope="col">Hành động</th>
 
                      </tr>
                    </thead>
                    <tbody> 
 
-                     <% userList.forEach(function(item, index){ %>
+                     <% roomList.forEach(function(item, index){ %>
                        <tr>
                          <th scope="row"><%= index + 1 %></th>
-                         <td><%= item.username %></td>
+                         <td><%= item.Room_category.name %></td>
                          <!-- <td><%= item.password %></td> -->
-                         <td><%= item.fullname %></td>
-                         <td><%= item.email %></td>
-                         <td><%= item.phone %></td>
+                         <td><%= item.roomNumber %></td>
+                         <td><%= item.floor %></td>
+                         <td><%= item.status %></td>
                          <!-- <td><%= item.role %></td> -->
 
                          <td>
-                           <form class="mb-1" style="display: inline;" action="/admin/user/updateUser/<%= item.id%>"  method="GET">
+                           <form class="mb-1" style="display: inline;" action="/admin/room/updateRoom/<%= item.id%>"  method="GET">
                              <i></i>
                              <button type="submit"  class="btn btn-outline-warning"><i class="ti ti-pencil"></i></button>
                            </form>
-                           <form style="display: inline;" action="/admin/user/delete-user/<%= item.id%>"  method="POST">
+                           <form style="display: inline;" action="/admin/room/delete-room/<%= item.id%>"  method="POST">
                              <button type="submit" class="btn btn-outline-danger"><i class="ti ti-trash"></i></button>
                              <!-- <input type="text" hidden value="<%= item.id%>" name="id" /> -->
                              

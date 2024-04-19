@@ -26,10 +26,10 @@
       <!--  Header End -->
       <div class="container-fluid">
         <div class="container-fluid">
-          <h3>Quản lý loại phòng</h3>
+          <h3>Quản lý dịch vụ</h3>
           <div class="card">
             <div class="card-body">
-             <a href="/admin/category/createCategory"> <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button></a>
+             <a href="/admin/service/createService"> <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button></a>
               
 
               <div class=" table-responsive">
@@ -37,10 +37,7 @@
                   <thead>
                     <tr class="table-active">
                       <th scope="col">Hình ảnh</th>
-                      <th scope="col">Tên phòng</th>
-                      <th scope="col">Diện tích</th>
-                      <th scope="col">Số người</th>
-                      <th scope="col">Loại giường</th>
+                      <th scope="col">Tên dịch vụ</th>
                       <th scope="col">Giá</th>
                       <th scope="col">Mô tả</th>
                       <th scope="col">Hành động</th>
@@ -49,22 +46,19 @@
                   </thead>
                   <tbody> 
 
-                    <% categoryList.forEach(function(item, index){ %>
+                    <% serviceList.forEach(function(item, index){ %>
                       <tr>
                         <td><img src= "/image/uploadFile/<%= item.image %>" width="200" height="150" /></td>
                         <td><%= item.name %></td>
-                        <td><%= item.square %></td>
-                        <td><%= item.numberOfPeople %></td>
-                        <td><%= item.typeOfBed %> </td>
                         <td><%= item.price %> VNĐ</td>
                         <td style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;"><%= item.description %></td>
                         <!-- <td><%= item.image %></td> -->
 
                         <td>
-                          <form  class="mb-1"  action="/admin/category/updateCategory/<%= item.id%>"  method="GET">
+                          <form  class="mb-1"  action="/admin/service/updateService/<%= item.id%>"  method="GET">
                             <button type="submit"  class="btn btn-outline-warning"><i class="ti ti-pencil"></i></button>
                           </form>
-                          <form style="display: inline;" action="/admin/category/delete-category/<%= item.id%>"  method="POST">
+                          <form style="display: inline;" action="/admin/service/delete-service/<%= item.id%>"  method="POST">
                             <button type="submit" class="btn btn-outline-danger"><i class="ti ti-trash"></i></button>
                             <!-- <input type="text" hidden value="<%= item.id%>" name="id" /> -->
                           </form>

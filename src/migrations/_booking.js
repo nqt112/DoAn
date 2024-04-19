@@ -13,10 +13,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       checkIn: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       checkOut: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       status: {
         type: Sequelize.STRING

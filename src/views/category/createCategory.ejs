@@ -34,36 +34,38 @@
                 <div class="card-body">
                   <form action="/admin/category/create-new-category" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Hình ảnh</label>
+                      <input type="file" class="form-control" required name= "image">  
+                    </div>
+                    <div class="mb-3">
                       <label for="exampleInputEmail1" class="form-label">Tên loại phòng</label>
-                      <input type="text" class="form-control" id="exampleInputEmail1" name ="name" aria-describedby="emailHelp">
+                      <input type="text" class="form-control" id="exampleInputEmail1" required name ="name" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Square</label>
-                      <input type="text" class="form-control" name= "square">
+                      <label for="exampleInputPassword1" class="form-label">Diện tích</label>
+                      <input type="text" class="form-control" required name= "square">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">NumberOfPeople</label>
-                      <input type="text" class="form-control" name= "numberOfPeople">
+                      <label for="exampleInputPassword1" class="form-label">Số người</label>
+                      <input type="number" class="form-control" required name= "numberOfPeople">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">TypeOfBed</label>
-                      <input type="text" class="form-control" name= "typeOfBed">
+                      <label for="exampleInputPassword1" class="form-label">Loại giường</label>
+                      <input type="text" class="form-control" required name= "typeOfBed">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Price</label>
-                      <input type="number" class="form-control" name= "price">
+                      <label for="exampleInputPassword1" class="form-label">Giá</label>
+                      <input type="number" class="form-control" required name= "price">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Description</label>
-                      <input type="text" class="form-control" name= "description">
+                      <label for="exampleInputPassword1" class="form-label">Mô tả</label>
+                      <input type="text" class="form-control" required name= "description">
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Image</label>
-                      <input type="file" class="form-control" name= "image">                        
-                      </form>
+                                            
                       <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="/admin/category/categorylist"> <button type="button" class="btn btn-outline-danger">Back</button></a>  
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <a href="/admin/category/categorylist"> <button type="button" class="btn btn-outline-danger">Quay lại</button></a>  
                       </div>
                     </div>
                   </form>
