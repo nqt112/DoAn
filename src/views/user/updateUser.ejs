@@ -35,17 +35,14 @@
 
                   <form action="/admin/user/update-user/<%= user.id%>" method="post">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Tên tài khoản</label>
-                      <input type="text" value="<%= user.username %>" required  class="form-control" id="exampleInputEmail1"  name ="username" aria-describedby="emailHelp">
+                      <label for="exampleInputPassword1" class="form-label">Họ & Tên</label>
+                      <input type="text" value="<%= user.fullname %>" required class="form-control" name= "fullname">
                     </div>
                     <div class="mb-3"> 
                       <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
                       <input type="password" value="<%= user.password %>" required class="form-control" name= "password">
                     </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Họ & Tên</label>
-                      <input type="text" value="<%= user.fullname %>" required class="form-control" name= "fullname">
-                    </div>
+
                     <div class="mb-3">
                       <label for="exampleInputPassword1" class="form-label">Email</label>
                       <input type="email" value="<%= user.email %>" class="form-control" required name= "email">

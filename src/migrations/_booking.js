@@ -12,6 +12,9 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
+      code: {
+        type: Sequelize.STRING
+      },
       checkIn: {
         type: Sequelize.DATEONLY
       },
