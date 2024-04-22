@@ -24,16 +24,53 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+    
 </head>
 
 <body>
     <!-- Header Section Begin -->
-    <%- include('./_partialView/header.ejs') %>
+    <header class="header-section">
+        <div class="menu-item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="logo">
+                            <a href="./index.html">
+                                <image src="image/logo.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="nav-menu">
+                            <nav class="mainmenu">
+                                <ul>
+                                    <li class="active"><a href="./">Trang chủ</a></li>
+                                    <li><a href="./">Đặt phòng</a></li>
+                                    <li><a href="./">Dịch vụ</a></li>
+                                    
+                                    <% if (user) { %>
+                                        <!-- Nếu đã đăng nhập, hiển thị nav tài khoản với user.id -->
+                                        <li><a href="/userDetail/<%= user.id %>">Tài khoản</a></li>
+                                    <% } else { %>
+                                        <!-- Nếu chưa đăng nhập, chỉ hiển thị nav tài khoản -->
+                                        <li><a href="/userDetail/">Tài khoản</a></li>
+                                    <% } %>
+                                    <li >
+                                    </li>
+                                </ul>
+                                
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
     <!-- Header End -->
-
     <!-- Hero Section Begin -->
     <section class="hero-section">
         <div class="container">
+            
             <div class="row">
                 <div class="col-lg-6">
                     <div class="hero-text">

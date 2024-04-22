@@ -360,7 +360,7 @@ ul, ol {
 	display: inline-block;
 }
 .menu-item .nav-menu {
-	text-align: right;
+	text-align: left;
 }
 .menu-item .nav-menu .mainmenu {
 	display: inline-block;

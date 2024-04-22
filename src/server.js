@@ -4,6 +4,11 @@ import configViewengine from './config/viewEngine';
 import initWebRoutes from './routes/web';
 import connection from "./config/connectDB";
 import initAdminRoutes from './routes/routeAdmin';
+import cookieParser from 'cookie-parser';
+import connectFlash from 'connect-flash';
+import session from 'express-session';
+import passport from 'passport';
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -11,9 +16,25 @@ const PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
+app.use (cookieParser('secret'));
+
+//config session
+app.use (session({
+  cookie: {maxAge: 60000},
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: false
+}))
+
+//enable flash message
+app.use(connectFlash());
+
 connection();
 
 configViewengine(app);
+
+app.use(passport.initialize());
+app.use(passport.session())
 
 initAdminRoutes(app);
 
