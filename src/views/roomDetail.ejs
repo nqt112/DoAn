@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Sona Template">
+    <meta name="keywords" content="Sona, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sona | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600,700&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/flaticon.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+
+    <!-- Header Section Begin -->
+    <header class="header-section">
+        <div class="menu-item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="logo">
+                            <a href="/">
+                                <image src="/image/logo.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="nav-menu">
+                            <nav class="mainmenu">
+                                <ul>
+                                    <li class="active"><a href="/">Trang chủ</a></li>
+                                    <li><a href="/roomBooking">Đặt phòng</a></li>
+                                    <li><a href="./">Dịch vụ</a></li>
+                                    
+                                    <% if (user) { %>
+                                        <!-- Nếu đã đăng nhập, hiển thị nav tài khoản với user.id -->
+                                        <li><a href="/userDetail/<%= user.id %>">Tài khoản</a></li>
+                                    <% } else { %>
+                                        <!-- Nếu chưa đăng nhập, chỉ hiển thị nav tài khoản -->
+                                        <li><a href="/userDetail/">Tài khoản</a></li>
+                                    <% } %>
+                                    <li >
+                                    </li>
+                                </ul>
+                                
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header End -->
+
+    <!-- Breadcrumb Section Begin -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-text">
+                        <h2>Chi tiết phòng</h2>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Room Details Section Begin -->
+    <section class="room-details-section spad">
+        <div class="container">
+            <div class="row">
+                <% categoryList.forEach(function(item, index){ %>
+                <div class="col-lg-8">
+                    <div class="room-details-item">
+                        <img src="/image/uploadFile/<%= item.image %>" alt="" width="100%" height="350px">
+                        <div class="rd-text">
+                            <div class="rd-title">
+                                <h3><%= item.name %></h3>
+                            </div>
+                            <h2><%= item.price %> VNĐ<span>/Đêm</span></h2>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="r-o">Diện tích:</td>
+                                        <td><%= item.square %>  m²</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Số người tối đa:</td>
+                                        <td><%= item.numberOfPeople %></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Loại giường:</td>
+                                        <td><%= item.typeOfBed %></td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td class="r-o">Services:</td>
+                                        <td>Wifi, Television, Bathroom,...</td>
+                                    </tr> -->
+                                    <tr>
+                                        <td class="r-o">Mô tả:</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="f-para"><%= item.description %></p>
+                            
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+
+                <div class="col-lg-4">
+                    <div class="room-booking">
+                        <h3>Đặt phòng</h3>
+                        <form action="post">
+                            <div class="check-date">
+                                <label for="date-in">Check In:</label>
+                                <input type="text" class="date-input" name="checkin" id="date-in">
+                                <i class="icon_calendar"></i>
+                            </div>
+                            <div class="check-date">
+                                <label for="date-out">Check Out:</label>
+                                <input type="text" class="date-input" name="checkout" id="date-out">
+                                <i class="icon_calendar"></i>
+                            </div>
+                            <div class="select-option">
+                                <label for="guest">Số người:</label>
+                                <select id="guest" name="numberOfPeople">
+                                    <option value="2">2 người</option>
+                                    <option value="3">3 người</option>
+                                    <option value="4">4 người</option>
+                                    <option value="5">5 người</option>
+                                </select>
+                            </div>
+                            <div class="select-option">
+                                <label for="room">Phòng:</label>
+                                <select id="room">
+                                    <option value="">1 Phòng</option>
+                                </select>
+                            </div>
+                            <a href="/roomBooking"><button type="submit">Tìm phòng</button></a>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Room Details Section End -->
+
+    <!-- Footer Section Begin -->
+    <%- include('./_partialView/footer.ejs') %>
+
+    <!-- Footer Section End -->
+
+    <!-- Js Plugins -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/jquery.nice-select.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/jquery.slicknav.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

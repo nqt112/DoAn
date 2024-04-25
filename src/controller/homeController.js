@@ -2,8 +2,13 @@ import db from "../models/index";
 import bcryptjs from 'bcryptjs';
 
 let getHomePage = async(req, res) => {
-    return await res.render('home.ejs', {
-        user: req.user
+    let categoryList = await db.Room_category.findAll({
+        // include: {model: db.Room_category, attributes: ['id','name'],},
+        raw: true,
+        nest:true,
+    })
+    return res.render('home.ejs', {
+        user: req.user, categoryList
     });
 }
 let getDetailPage = async (req, res) => {
@@ -18,42 +23,6 @@ let getUserDetailPage = async(req, res) => {
     })  
     return res.render('./userDetail.ejs', {user: user});
 }
-// let postUserDetail = async (req, res) => {
-//     let id = req.params.id;
-//     let { password, fullname, email, phone } = req.body;
-//     try {
-//       if(password){
-//         let salt = await bcryptjs.genSalt(10);
-//         let hashPassword = await bcryptjs.hash(password, salt);
-//         await db.User.update( {
-//             fullname: fullname,
-//             email: email,
-//             phone: phone,
-//             password: hashPassword,
-//         },{
-//             where: {
-//                 id: id
-//             }
-//         })  
-//       }
-//     else{
-//         await db.User.update( {
-//             fullname: fullname,
-//             email: email,
-//             phone: phone,
-//         },{
-//             where: {
-//                 id: id
-//             }
-//         })
-//     }
-
-//     } catch (err) {
-//         console.log(err);
-//     }
-
-//     return res.redirect('/');
-// }
 let postUserDetail = async (req, res) => {
     let id = req.params.id;
     let { password, fullname, email, phone } = req.body;
@@ -83,10 +52,21 @@ let postUserDetail = async (req, res) => {
 
     return res.redirect('/');
 }
+let getRoomDetail = async (req, res) => {
+    let id = req.params.id;
+    let categoryList = await db.Room_category.findAll({
+        // include: {model: db.Room_category, attributes: ['id','name'],},
+        where: {id: id},
+        raw: true,
+        nest:true,
+    })
+    return res.render('./roomDetail.ejs',{
+        user: req.user, categoryList: categoryList});
+}
 
 
 
 
 module.exports = {
-    getHomePage, postUserDetail, getUserDetailPage, getDetailPage
+    getHomePage, postUserDetail, getUserDetailPage, getDetailPage, getRoomDetail
 }
