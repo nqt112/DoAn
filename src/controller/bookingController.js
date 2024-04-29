@@ -13,7 +13,6 @@ let getRoomBooking = async (req, res) => {
             status : "Trống",
         }
     })
-    console.log(count)
     return res.render('./roomBooking.ejs',{
         user: req.user, categoryList, count
     });

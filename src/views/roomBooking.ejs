@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -97,14 +98,17 @@
                                 </select>
                             </div>
                             <div class="select-option d-inline-block">
-                                <label for="room">Room:</label>
+                                <label for="room">Số phòng:</label>
                                 <select id="room" >
-                                    <option value="">1 Room</option>
+                                    <option value="">1 phòng</option>
+                                    <option value="">2 phòng</option>
+                                    <option value="">3 phòng</option>
+                                    <option value="">4 phòng</option>
                                 </select>
                             </div>
                             <div class="d-inline-block">   
             
-                                <button type="submit">Check Availability</button>
+                                <button type="submit">Thêm phòng</button>
                             </div>
                         </form>
                     </div>
@@ -126,7 +130,6 @@
                         <th scope="col">Loại phòng</th>
                         <th scope="col">Số người tối đa</th>
                         <th scope="col">Giá phòng</th>
-                        <th scope="col">Số phòng trống</th>
                         <th scope="col">Số lượng phòng</th>
                       </tr>
                     </thead>
@@ -141,7 +144,6 @@
                         </th>
                         <td><%= item.numberOfPeople %></td>
                         <td><%= item.price %> VNĐ/ Đêm</td>
-                        <td>@mdo</td>
                         <!-- <td ><input style="width: 50px; align-items: center;" type="number"></td> -->
                         <td>
                             <input style="width: 50px" type="number" id="myInput" value="1">
@@ -157,7 +159,15 @@
                <div class="col-lg-3">
                 <div>
                     <h5>Thông tin đặt phòng</h5>
+                    <div>
+                        thông tin phòng....
+                    </div>
+                    <div>
+                        Tổng giá
                 </div>
+                </div>
+                <button type="submit">Đặt phòng</button>
+
                
             </div>
             </div>

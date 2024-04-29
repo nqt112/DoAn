@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Booking.belongsTo(models.User,{foreignKey: 'userId'});
       Booking.hasOne(models.Invoice,{foreignKey: 'bookingId'});
       Booking.hasMany(models.Booking_detail,{foreignKey: 'bookingId'});
+      Booking.belongsTo(models.Day_room,{foreignKey: 'bookingId'});
       
     }
   }

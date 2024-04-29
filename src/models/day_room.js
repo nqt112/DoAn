@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Day_room.belongsTo(models.Room,{foreignKey: 'roomId'});
       Day_room.hasMany(models.Booking_detail,{foreignKey: 'bookingDetailId'});
+      Day_room.hasMany(models.Booking,{foreignKey: 'bookingId'});
     }
   }
   Day_room.init({
