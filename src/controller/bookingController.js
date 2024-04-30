@@ -17,7 +17,13 @@ let getRoomBooking = async (req, res) => {
         user: req.user, categoryList, count
     });
 }
-
+let getService = async (req, res) => {
+    let serviceList = await db.Service.findAll({
+        
+    })
+    return res.render('./service.ejs',{
+        user: req.user,serviceList: serviceList});
+}
 module.exports = {
-    getRoomBooking
+    getRoomBooking, getService
 }

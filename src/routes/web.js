@@ -34,6 +34,8 @@ const initWebRoutes = (app) => {
 
     router.get('/roomBooking', bookingController.getRoomBooking)
 
+    router.get('/service', bookingController.getService)
+
     router.get('/test', (req, res) => {
         return res.send('1')
     })

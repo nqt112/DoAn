@@ -75,42 +75,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
+                    <h3>Đặt dịch vụ</h3>
                     <div class="room-booking  p-0">
-                        <h3>Đặt phòng</h3>
-                        <form action="get">
-                            <div class="check-date d-inline-block">
-                                <label for="date-in">Check In:</label>
-                                <input type="date" value="" name="checkin" placeholder="Check In" class="dateInput">
-                                <!-- <i class="icon_calendar"></i> -->
-                            </div>
-                            <div class="check-date d-inline-block">
-                                <label for="date-out ">Check Out:</label>
-                                <input type="date" value=""  name="checkout" class="dateOutput">
-                                <!-- <i class="icon_calendar"></i> -->
-                            </div>
-                            <div class="select-option d-inline-block" >
-                                <label for="guest">Số người:</label>
-                                <select id="guest" name="numberOfPeople">
-                                    <option value="2">2 người</option>
-                                    <option value="3">3 người</option>
-                                    <option value="4">4 người</option>
-                                    <option value="5">5 người</option>
-                                </select>
-                            </div>
-                            <div class="select-option d-inline-block">
-                                <label for="room">Số phòng:</label>
-                                <select id="room" >
-                                    <option value="">1 phòng</option>
-                                    <option value="">2 phòng</option>
-                                    <option value="">3 phòng</option>
-                                    <option value="">4 phòng</option>
-                                </select>
-                            </div>
-                            <div class="d-inline-block">   
-            
-                                <button type="submit">Thêm phòng</button>
-                            </div>
-                        </form>
+                       
                     </div>
                 </div>
                 
@@ -127,14 +94,14 @@
                 <table class="table align-middle table-bordered">
                     <thead class="table-dark">
                       <tr>
-                        <th scope="col">Loại phòng</th>
-                        <th scope="col">Số người tối đa</th>
-                        <th scope="col">Giá phòng</th>
-                        <th scope="col">Số lượng phòng</th>
+                        <th scope="col">Loại dịch vụ</th>
+                        <th scope="col">Giá dịch vụ</th>
+                        <th scope="col">Mô tả</th>
+                        <th scope="col">Số lượng</th>
                       </tr>
                     </thead>
                     <tbody>
-                        <% categoryList.forEach(function(item, index){ %>
+                        <% serviceList.forEach(function(item, index){ %>
                       <tr class="">
                         <th scope="row">
                             <div>
@@ -142,11 +109,11 @@
                             </div>
                             <img src="/image/uploadFile/<%= item.image %>" alt="" width="150" height="100">
                         </th>
-                        <td><%= item.numberOfPeople %></td>
-                        <td><%= item.price %> VNĐ/ Đêm</td>
+                        <td><%= item.price %> VNĐ</td>
+                        <td><%= item.description %></td>
                         <!-- <td ><input style="width: 50px; align-items: center;" type="number"></td> -->
                         <td>
-                            <input style="width: 50px" type="number" id="myInput" value="1">
+                            <input style="width: 50px" type="number" id="myInput" value="0">
                             </td>
                       </tr>
                      
@@ -196,54 +163,7 @@
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
-    
-    <script>
-        // Lấy tất cả các phần tử có class là "dateInput"
-        var dateInputs = document.getElementsByClassName("dateInput");
-    
-        // Lấy tất cả các phần tử có class là "dateOutput"
-        var dateOutputs = document.getElementsByClassName("dateOutput");
-    
-        // Lấy ngày hiện tại
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-        var yyyy = today.getFullYear();
-        var todayString = yyyy + '-' + mm + '-' + dd;
-    
-        // Thiết lập giá trị tối thiểu cho các input
-        for (var i = 0; i < dateInputs.length; i++) {
-            dateInputs[i].setAttribute("min", todayString);
-        }
-    
-        // Kiểm tra khi có sự thay đổi trong input
-        for (var i = 0; i < dateInputs.length; i++) {
-            dateInputs[i].addEventListener("change", function() {
-                var selectedDate = new Date(this.value); // Ngày được chọn trong dateInput
-                var dd = String(selectedDate.getDate()).padStart(2, '0');
-                var mm = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-                var yyyy = selectedDate.getFullYear();
-                var selectedDateString = yyyy + '-' + mm + '-' + dd;
-    
-                // Hiển thị ngày đã chọn trong phần tử dateOutput
-                for (var j = 0; j < dateOutputs.length; j++) {
-                    dateOutputs[j].innerText = "Ngày đã chọn: " + selectedDateString;
-                    dateOutputs[j].setAttribute("min", selectedDateString); // Giới hạn dateOutput từ ngày được chọn
-                }
-            });
-        }
-        function incrementValue() {
-            var input = document.getElementById("myInput");
-            input.value = parseInt(input.value) + 1;
-            }
 
-            function decrementValue() {
-            var input = document.getElementById("myInput");
-            if (input.value > 0) {
-            input.value = parseInt(input.value) - 1;
-            }
-            }
-    </script>
     
 </body>
 

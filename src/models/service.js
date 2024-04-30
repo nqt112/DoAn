@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Service.hasMany(models.Invoice_detail, {foreignKey: 'serviceId'});
+      Service.hasMany(models.Sub_service, {foreignKey: 'serviceId'});
     }
   }
   Service.init({
