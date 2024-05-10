@@ -170,12 +170,37 @@ let getServiceList = async (req, res)=>{
     catch (error) {
         return res.json(error);
     }
-
+}
+// let postBookingService = async (req, res) => {
+//     try {
+//         const body = req.body;
+//         const bookingService = await db.Booking_service.create({
+//             bookingId: body.bookingId,
+//             serviceId: body.serviceId,
+//             quantity: body.quantity,
+//             total_price: body.total_price
+//         });
+//         return res.json(bookingService);
+//     } catch (error) {
+//         return res.json(error);
+//     }
+// }
+let postBookingService = async (req, res) => {
+    try {
+        const body = req.body;
+        const bookingService = body.services.map((service) => ({
+            ...service,
+        }));
+         await db.Booking_service.bulkCreate(bookingService);
+        return res.json(bookingService);
+    } catch (error) {
+        return res.json(error);
+    }
 }
 module.exports = {
     getRoomBooking,
     postRoomBooking,
     getBookingList,
     getBookingDetailPage, getModalDetail,
-    getServiceList
+    getServiceList, postBookingService
 };
