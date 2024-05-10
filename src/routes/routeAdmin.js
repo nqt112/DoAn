@@ -3,6 +3,7 @@ import userController from '../controller/userController';
 import categoryController from '../controller/categoryController';
 import roomController from '../controller/roomController';
 import serviceController from '../controller/serviceController';
+import bookingController from '../controller/bookingController';
 import express from 'express';
 import appRoot from 'app-root-path';
 import path from 'path';
@@ -57,6 +58,8 @@ const initAdminRoutes = (app) => {
     router.get('/service/createService/', serviceController.getCreateServicePage)
     router.get('/service/updateService/:id', serviceController.getUpdateServicePage)
     router.post('/service/update-service/:id', upload.single('image'), serviceController.updateService)
+
+    router.get('/booking/bookinglist',bookingController.getBookingList)
 
     router.get('/test', (req, res) => {
         return res.render('./user/createUser.ejs')

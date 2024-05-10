@@ -46,13 +46,15 @@
                                 <ul>
                                     <li class="active"><a href="./">Trang chủ</a></li>
                                     <li><a href="/roomBooking">Đặt phòng</a></li>
-                                    <li><a href="./">Dịch vụ</a></li>
                                     
                                     <% if (user) { %>
+                                        <li><a href="/bookingDetail/">Đơn đặt</a></li>
                                         <!-- Nếu đã đăng nhập, hiển thị nav tài khoản với user.id -->
                                         <li><a href="/userDetail/<%= user.id %>">Tài khoản</a></li>
                                     <% } else { %>
                                         <!-- Nếu chưa đăng nhập, chỉ hiển thị nav tài khoản -->
+                                        <li><a href="/bookingDetail">Đơn đặt</a></li>
+
                                         <li><a href="/userDetail/">Tài khoản</a></li>
                                     <% } %>
                                     <li >

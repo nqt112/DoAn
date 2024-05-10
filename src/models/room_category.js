@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       Room_category.hasMany(models.Room, {foreignKey: 'roomCategoryId'});
-      Room_category.hasMany(models.Invoice_detail, { foreignKey: 'roomCategoryId'});
+      // Room_category.hasMany(models.Invoice_detail, { foreignKey: 'roomCategoryId'});
+      Room_category.hasMany(models.Booking_detail, {foreignKey: 'roomCategoryId'});
+
     }
   }
   Room_category.init({
@@ -15,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     square: DataTypes.DECIMAL(10,2),
     numberOfPeople: DataTypes.INTEGER,
     typeOfBed: DataTypes.STRING,
-    price: DataTypes.DECIMAL(30,3),
+    price: DataTypes.DOUBLE,
     description: DataTypes.STRING,
     image: DataTypes.STRING
   }, {

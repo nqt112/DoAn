@@ -9,6 +9,9 @@ const submitButton = document.querySelector(".submit-button");
 
 // --------------------- các hàm để dùng
 const moneyFormat = (money) => {
+    if (isNaN(money)) {
+        return "0 ₫"; // Trả về giá trị mặc định nếu không phải là số
+    }
     const formatter = new Intl.NumberFormat("vi-VN", {
         style: "currency",
         currency: "VND",
@@ -20,15 +23,18 @@ const moneyFormat = (money) => {
 const caculateTotal = () => {
     let total = 0;
 
-    const roomSelectItems =
-        roomSelectItemList.querySelectorAll(".room_select_item");
+    const roomSelectItems = roomSelectItemList.querySelectorAll(".room_select_item");
+    const checkInDate = new Date(dateInput.value);
+    const checkOutDate = new Date(dateOutput.value);
+    const numberOfDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 3600 * 24)); // Số ngày thuê
+
     roomSelectItems.forEach((roomSelectItem) => {
-        total +=
-            Number(roomSelectItem.querySelector(".price").innerHTML) *
-            roomSelectItem.dataset.number;
+        const pricePerNight = Number(roomSelectItem.querySelector(".price").innerHTML);
+        const numberOfRooms = roomSelectItem.dataset.number;
+        total += pricePerNight * numberOfRooms * numberOfDays;
     });
 
-    totalPrice.innerHTML = moneyFormat(total * 1000);
+    totalPrice.innerHTML = moneyFormat(total);
 };
 
 const createRoomSelectItem = (item, number) => {
@@ -40,7 +46,6 @@ const createRoomSelectItem = (item, number) => {
                   ${item.name}
               </h5>
           </div>
-          <img src="/image/uploadFile/${item.image}" alt="" width="150" height="100">
       </th>
       <td class="d-none">
           <span class="price">${item.price}</span> VNĐ/ Đêm
@@ -72,9 +77,12 @@ const handleValidateData = () => {
 
 const handleFetchData = async () => {
     try {
+        const total_price_str = totalPrice.innerText.replace(/\D/g, ''); // Loại bỏ tất cả các ký tự không phải là số
+        const total_price = parseFloat(total_price_str);
         const data = {
             checkIn: dateInput.value,
             checkOut: dateOutput.value,
+            total_price: total_price,
             rooms: [],
         };
 
@@ -83,7 +91,7 @@ const handleFetchData = async () => {
 
         roomSelectItems.forEach((roomSelectItem) => {
             data.rooms.push({
-                roomId: roomSelectItem.dataset.id,
+                roomCategoryId: roomSelectItem.dataset.id,
                 quantity: roomSelectItem.dataset.number,
             });
         });
@@ -122,18 +130,38 @@ roomItems.forEach((roomItem) => {
         caculateTotal();
     };
 });
+const formatDate = (dateString) => {
+    const dateParts = dateString.split('-');
+    if (dateParts.length === 3) {
+      const [year, month, day] = dateParts;
+      return `${day}-${month}-${year}`;
+    } else {
+      return dateString; // Trả về ngày không thay đổi nếu không thành công
+    }
+  };
 
+  
 dateInput.onchange = (e) => {
-    checkInValue.innerHTML = e.target.value;
+    checkInValue.innerHTML = formatDate(e.target.value) ;
 };
 
 dateOutput.onchange = (e) => {
-    checkOutValue.innerHTML = e.target.value;
+    checkOutValue.innerHTML = formatDate(e.target.value);
 };
+// Xử lý sự kiện khi thay đổi ngày nhận phòng
+dateInput.addEventListener('change', caculateTotal);
+
+// Xử lý sự kiện khi thay đổi ngày trả phòng
+dateOutput.addEventListener('change', caculateTotal);
 
 submitButton.onclick = () => {
     if (!handleValidateData()) {
         return;
     }
-    handleFetchData();
+    if (confirm("Xác nhận đặt phòng!")) {
+        handleFetchData(); // Nếu người dùng chọn "OK", gọi hàm xử lý đặt phòng
+    } else {
+        // Nếu người dùng chọn "Cancel", không làm gì cả hoặc có thể hiển thị thông báo khác
+    }
+    // handleFetchData();
 };

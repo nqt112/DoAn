@@ -64,9 +64,6 @@ let getRoomDetail = async (req, res) => {
         user: req.user, categoryList: categoryList});
 }
 
-
-
-
 module.exports = {
     getHomePage, postUserDetail, getUserDetailPage, getDetailPage, getRoomDetail
 }

@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       price: {
-        type: Sequelize.DECIMAL(30,2)
+        type: Sequelize.DOUBLE
       },
       description: {
         type: Sequelize.STRING(500)

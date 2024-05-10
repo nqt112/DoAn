@@ -21,6 +21,9 @@ module.exports = {
       checkOut: {
         type: Sequelize.DATEONLY
       },
+      total_price: {
+        type: Sequelize.DOUBLE
+      },
       status: {
         type: Sequelize.STRING
       },

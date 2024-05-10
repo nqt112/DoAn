@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
+  <link rel="stylesheet" href="/css/styles.min.css" />
+  <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <%- include('../_partialView/asideAdmin.ejs') %>
+
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+    <%- include('../_partialView/headerAdmin.ejs') %>
+      
+      <!--  Header End -->
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <h3>Quản lý đơn đặt</h3>
+          <div class="card">
+            <div class="card-body">
+             <a href="/admin/service/createService"> <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button></a>
+              
+
+              <div class=" table-responsive">
+                <table class="table table-hover ">
+                  <thead>
+                    <tr class="table-active">
+                      <th scope="col">Người đặt</th>
+                      <th scope="col">Tổng tiền</th>
+                      <th scope="col">Checkin</th>
+                      <th scope="col">CheckOut</th>
+                      <th scope="col">Ngày tạo</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Hành động</th>
+
+                    </tr>
+                  </thead>
+                  <tbody> 
+
+                    <% bookingList.forEach(function(item, index){ %>
+                      <tr>
+                        <td><%= item.User.fullname %></td>
+                        <td><%= item.total_price %></td>
+                        <td><%= item.checkIn %> </td>
+                        <td><%= item.checkOut %> </td>
+                        <td><%= item.createdAt %> </td>
+                        <td><%= item.status %> </td>
+                        <td>
+                          <form  class="mb-1"  action="/admin/service/updateService/<%= item.id%>"  method="GET">
+                            <button type="submit"  class="btn btn-outline-warning"><i class="ti ti-pencil"></i></button>
+                          </form>
+                          <form  class="mb-1"  action=""  method="GET">
+                            <button type="submit"  class="btn btn-outline-warning">Chi tiết</button>
+                          </form>
+                          <form style="display: inline;" action="/admin/service/delete-service/<%= item.id%>"  method="POST">
+                            <button type="submit" class="btn btn-outline-danger"><i class="ti ti-trash"></i></button>
+                            <!-- <input type="text" hidden value="<%= item.id%>" name="id" /> -->
+                          </form>
+                        </td>
+                      </tr>
+                    <% }) %>
+                    
+                  </tbody>
+                  
+                </table>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sidebarmenu.js"></script>
+  <script src="/js/app.min.js"></script>
+  <script src="/libs/simplebar/dist/simplebar.js"></script>
+</body>
+
+</html>

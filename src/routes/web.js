@@ -62,6 +62,14 @@ const initWebRoutes = (app) => {
         loginController.checkLoggedIn,
         bookingController.postRoomBooking
     );
+    router.get(
+        "/bookingDetail/",
+        loginController.checkLoggedIn,
+        bookingController.getBookingDetailPage
+    );
+    router.get("/bookingDetail/:id", bookingController.getModalDetail)
+
+    router.get("/api/serviceList", bookingController.getServiceList)    
 
     // câu truy vấn test lấy ra dữ liệu booking cùng booking detail và các bảng liên quan.
     router.get("/roomBooking/:id", async (req, res) => {
@@ -89,9 +97,6 @@ const initWebRoutes = (app) => {
         }
     });
 
-    router.get("/test", (req, res) => {
-        return res.send("1");
-    });
     return app.use("/", router);
 };
 

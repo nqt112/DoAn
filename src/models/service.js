@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Service.hasMany(models.Invoice_detail, {foreignKey: 'serviceId'});
-      Service.hasMany(models.Sub_service, {foreignKey: 'serviceId'});
+      // Service.hasMany(models.Invoice_detail, {foreignKey: 'serviceId'});
+      Service.hasMany(models.Booking_service, {foreignKey: 'serviceId'});
     }
   }
   Service.init({
     name: DataTypes.STRING,
     image: DataTypes.STRING,
-    price: DataTypes.DECIMAL(30,3),
+    price: DataTypes.DOUBLE,
     description: DataTypes.STRING,
   }, {
     sequelize,

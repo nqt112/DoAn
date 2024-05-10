@@ -46,9 +46,9 @@
                                 <ul>
                                     <li class=""><a href="/">Trang chủ</a></li>
                                     <li class="active"><a href="/roomBooking">Đặt phòng</a></li>
-                                    <li><a href="./">Dịch vụ</a></li>
-
+                                    
                                     <% if (user) { %>
+                                        <li class=""><a href="/bookingDetail">Đơn đặt</a></li>
                                         <!-- Nếu đã đăng nhập, hiển thị nav tài khoản với user.id -->
                                         <li><a href="/userDetail/<%= user.id %>">Tài khoản</a></li>
                                         <% } else { %>
@@ -76,7 +76,7 @@
                 <div class="col-lg-12">
                     <div class="room-booking  p-0">
                         <h3>Đặt phòng</h3>
-                        <form action="get">
+                        <form action="">
                             <div class="check-date d-inline-block">
                                 <label for="date-in">Check In:</label>
                                 <input type="date" value="" name="checkin" placeholder="Check In" class="dateInput">
@@ -87,7 +87,7 @@
                                 <input type="date" value="" name="checkout" class="dateOutput">
                                 <!-- <i class="icon_calendar"></i> -->
                             </div>
-                            <div class="select-option d-inline-block">
+                            <!-- <div class="select-option d-inline-block">
                                 <label for="guest">Số người:</label>
                                 <select id="guest" name="numberOfPeople">
                                     <option value="2">2 người</option>
@@ -104,10 +104,9 @@
                                     <option value="">3 phòng</option>
                                     <option value="">4 phòng</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="d-inline-block">
-
-                                <button type="submit">Thêm phòng</button>
+                                <!-- <button type="submit">Thêm phòng</button> -->
                             </div>
                         </form>
                     </div>
@@ -166,13 +165,13 @@
 
                 <div class="col-lg-3">
                     <div>
-                        <h5>Thông tin đặt phòng</h5>
+                        <h4>Thông tin đặt phòng</h4>
                         <div>
-                            Check In:
-                            <span class="check-in-value"></span>
+                            Checkin:
+                            <span class="check-in-value dateInput" ></span>
                         </div>
                         <div>
-                            Check out:
+                            Checkout:
                             <span class="check-out-value"></span>
                         </div>
 
@@ -185,18 +184,16 @@
                                 </tr>
                             </thead>
                             <tbody class="room_select_item_list">
-
+                                <!-- render list booked room -->
                             </tbody>
-
                         </table>
-
-                        <div>
-                            Tổng giá: <span class="total-price">0</span>
+                        <div name ="total_price">
+                            Tổng tiền: <span class="total-price"></span>
                         </div>
                     </div>
-                    <button type="submit" class="submit-button">Đặt phòng</button>
-
-
+                    <div class="mt-2">
+                        <button type="submit" class="submit-button btn btn-outline-secondary ">Đặt phòng</button>
+                    </div>
                 </div>
             </div>
 
@@ -261,17 +258,6 @@
                         dateOutputs[j].setAttribute("min", selectedDateString); // Giới hạn dateOutput từ ngày được chọn
                     }
                 });
-            }
-            function incrementValue() {
-                var input = document.getElementById("myInput");
-                input.value = parseInt(input.value) + 1;
-            }
-
-            function decrementValue() {
-                var input = document.getElementById("myInput");
-                if (input.value > 0) {
-                    input.value = parseInt(input.value) - 1;
-                }
             }
         </script>
 

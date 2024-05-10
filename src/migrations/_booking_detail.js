@@ -15,6 +15,9 @@ module.exports = {
       roomId: {
         type: Sequelize.INTEGER
       },
+      roomCategoryId: {
+        type: Sequelize.INTEGER
+      },
       quantity: {
         type: Sequelize.STRING
       },

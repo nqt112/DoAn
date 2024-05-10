@@ -9,9 +9,13 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Booking.belongsTo(models.User, { foreignKey: "userId" });
-            Booking.hasOne(models.Invoice, { foreignKey: "bookingId" });
-            Booking.hasMany(models.Booking_detail, { foreignKey: "bookingId" });
-            Booking.belongsTo(models.Day_room, { foreignKey: "bookingId" });
+            // Booking.hasOne(models.Invoice, { foreignKey: "bookingId" });
+            Booking.hasMany(models.Booking_detail, { foreignKey: "bookingId" },{
+                onDelete: 'SETNULL',
+                onUpdate: 'CASCADE',
+            });
+            Booking.hasMany(models.Booking_service, { foreignKey: "bookingId" });
+            // Booking.belongsTo(models.Day_room, { foreignKey: "bookingId" });
         }
     }
     Booking.init(
@@ -20,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             code: DataTypes.STRING,
             checkIn: DataTypes.DATEONLY,
             checkOut: DataTypes.DATEONLY,
+            total_price: DataTypes.DOUBLE,
             status: DataTypes.STRING,
         },
         {

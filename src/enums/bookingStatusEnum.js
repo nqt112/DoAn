@@ -1,7 +1,9 @@
 const BookingStatusEnum = {
-    WAIT: "wait",
-    ACTIVE: "active",
-    UN_ACTIVE: "un active",
+    WAIT: "Chờ xác nhận",
+    CONFIRM: "Đã xác nhận",
+    CHECKIN: "Đã checkin",
+    CHECKOUT: "Đã checkout",
+    CANCEL: "Huỷ",
 };
 
 export default BookingStatusEnum;
