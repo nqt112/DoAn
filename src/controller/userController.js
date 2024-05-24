@@ -1,8 +1,10 @@
-import { where } from 'sequelize';
 import db from '../models/index'
+import bcryptjs from "bcryptjs";
 
 let getCreateUserPage = async (req, res) => {
-    return res.render('./user/createUser.ejs');
+    return res.render('./user/createUser.ejs',{
+        errors: req.flash("errors"),
+    });
 }
 let getUpdateUserPage = async (req, res) => {
     let id = req.params.id;
@@ -21,23 +23,53 @@ let getUserList = async(req, res) => {
 }
 let createNewUser = async (req, res) => {
     let { username, password, fullname, email, phone, role ,createdAt} = req.body;
-    // if(!username || !password || !fullname || !email || !phone || !role) {
-    //     res.send('Vui lòng nhập đầy đủ thông tin')
-    // }
-    try{
+
+    // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
+    let emailExists = await checkEmailExist(email);
+    if (emailExists) {
+        req.flash('errors', `Email "${email}" đã tồn tại. Vui lòng chọn Email khác!!`);
+        return res.redirect('/admin/user/createUser');
+    }
+
+    // Mã hóa mật khẩu
+    let salt = await bcryptjs.genSalt(10);
+    let hashPassword = await bcryptjs.hash(password, salt);
+
+    try {
+        // Tạo người dùng mới
         await db.User.create({
             username: username,
-            password: password,
+            password: hashPassword,
             fullname: fullname,
             email: email,
             phone: phone,
             role: role,
             createdAt: createdAt
-        })
-    }catch (err) {
+        });
+        return res.redirect('/admin/user/userlist');
+    } catch (err) {
+        console.log(err);
+        req.flash('errors', 'Đã xảy ra lỗi trong quá trình tạo người dùng mới');
+        return res.redirect('/admin/user/userlist');
+    }
+};
+
+let checkEmailExist = async(email) => {
+    try{
+        return await db.User.findOne({
+            where: {
+              email: email
+            }
+          }).then(user => {
+            if (user) {
+              return true;
+            } else {
+              return false;
+            }
+          }); 
+    }catch(err){
         console.log(err)
     }
-    return res.redirect('/admin/user/userlist')
 }
 let deleteUser = async (req, res) => {
     let id = req.params.id;
@@ -74,5 +106,5 @@ let updateUser = async (req, res) => {
     return res.redirect('/admin/user/userlist')
 }
 module.exports = {
-    getUserList, createNewUser, deleteUser, getCreateUserPage, updateUser, getUpdateUserPage
+    getUserList, createNewUser, deleteUser, getCreateUserPage, updateUser, getUpdateUserPage, checkEmailExist
 }

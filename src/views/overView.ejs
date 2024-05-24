@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
+  <link rel="stylesheet" href="/css/styles.min.css" />
+  <link rel="stylesheet" href="/css/nice-select.css">
+  <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
+  <style>
+    .card {
+      display: flex;
+      /* Use flexbox */
+    }
+
+    .chart-container-wrapper {
+      display: flex;
+      width: 100%;
+      /* Ensure the container takes full width of the card */
+    }
+
+    .chart-container {
+      flex: 1;
+      /* Each chart container takes equal space */
+      padding: 10px;
+      /* Add padding for spacing */
+      box-sizing: border-box;
+      /* Ensure padding is included in width calculation */
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    .chart {
+      max-width: 400px;
+      margin: 0 auto;
+      /* Center the chart horizontally */
+    }
+  </style>
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <%- include('./_partialView/asideAdmin.ejs') %>
+      <!--  Sidebar End -->
+      <!--  Main wrapper -->
+      <div class="body-wrapper">
+        <!--  Header Start -->
+        <%- include('./_partialView/headerAdmin.ejs') %>
+          <!--  Header End -->
+          <div class="container-fluid">
+            <h2>Báo cáo tổng quan</h2>
+            <div class="card">
+              <div class="chart-container-wrapper">
+                <div class="chart-container">
+                  <select class="nice-select" id="reportType">
+                    <option value="monthly">Báo cáo theo tháng</option>
+                    <option value="yearly">Báo cáo theo năm</option>
+                  </select>
+                  <canvas id="monthlyRevenueChart"></canvas>
+                  <canvas id="yearlyRevenueChart" style="display:none;"></canvas>
+                </div>
+                <div class="chart-container">
+                  <select class="nice-select" id="reportMonth">
+                    <script>
+                      for (var i = 1; i <= 12; i++) {
+                        document.write('<option value="' + i + '">Tháng ' + i + '</option>');
+                      }
+                    </script>
+                  </select>
+                  <canvas id="dailyRevenueChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- New Card for Room Category Booking Count -->
+            <div class="card">
+              <div class="chart-container-wrapper">
+                <div class=" chart chart-container">
+                  <canvas id="roomCategoryChart"></canvas>
+                </div>
+                <div class="chart chart-container">
+                  <canvas id="serviceBookingChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+          </div>
+      </div>
+  </div>
+  </div>
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sidebarmenu.js"></script>
+  <script src="/js/app.min.js"></script>
+  <script src="/libs/simplebar/dist/simplebar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    var monthlyChart, yearlyChart, dailyChart, roomCategoryChart;
+
+    document.getElementById('reportType').onchange = function () {
+      const selectedOption = this.value;
+
+      let apiUrl;
+      if (selectedOption === 'monthly') {
+        apiUrl = '/admin/api/revenue/monthly';
+        document.getElementById('monthlyRevenueChart').style.display = 'block';
+        document.getElementById('yearlyRevenueChart').style.display = 'none';
+      } else if (selectedOption === 'yearly') {
+        apiUrl = '/admin/api/revenue/yearly';
+        document.getElementById('monthlyRevenueChart').style.display = 'none';
+        document.getElementById('yearlyRevenueChart').style.display = 'block';
+      }
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const labels = data.map(item => item.month || item.year);
+          const revenue = data.map(item => item.totalRevenue);
+
+          if (selectedOption === 'monthly') {
+            if (!monthlyChart) {
+              const ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
+              monthlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Doanh số theo tháng',
+                    data: revenue,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                    title: {
+                      display: true,
+                      text: 'Biểu đồ báo cáo doanh thu theo tháng',
+                      position: 'top',
+                      color: 'black',
+                      font: {
+                        size: 13
+                      }
+                    }
+                  }
+                }
+              });
+            } else {
+              monthlyChart.data.labels = labels;
+              monthlyChart.data.datasets[0].data = revenue;
+              monthlyChart.update();
+            }
+          } else if (selectedOption === 'yearly') {
+            if (!yearlyChart) {
+              const ctx = document.getElementById('yearlyRevenueChart').getContext('2d');
+              yearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Doanh số theo năm',
+                    data: revenue,
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                    title: {
+                      display: true,
+                      text: 'Biểu đồ báo cáo doanh thu theo năm',
+                      position: 'top',
+                      color: 'black',
+                      font: {
+                        size: 13
+                      }
+                    }
+                  }
+                }
+              });
+            } else {
+              yearlyChart.data.labels = labels;
+              yearlyChart.data.datasets[0].data = revenue;
+              yearlyChart.update();
+            }
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    };
+    document.getElementById('reportMonth').onchange = function () {
+      const selectedMonth = this.value;
+
+      const apiUrl = `/admin/api/revenue/daily?month=${selectedMonth}`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const labels = data.map(item => {
+            const day = new Date(item.Export_day).toLocaleDateString('vi-VN', { day: 'numeric' });
+            return day;
+          });
+          const revenue = data.map(item => item.totalRevenue);
+
+          const ctx = document.getElementById('dailyRevenueChart').getContext('2d');
+
+          if (!dailyChart) {
+            dailyChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Doanh số các ngày trong tháng',
+                  data: revenue,
+                  backgroundColor: 'rgba(72, 118, 255, 0.4)',
+                  borderColor: 'rgba(72, 118, 255, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                },
+                plugins: {
+                  legend: {
+                    position: 'top',
+                  },
+                  title: {
+                    display: true,
+                    text: 'Biểu đồ báo cáo doanh thu trong tháng',
+                    color: 'black',
+                    font: {
+                      size: 13
+                    }
+                  }
+                }
+              }
+            });
+          } else {
+            if (data.length === 0) { // If there is no data for the selected month
+              // Set chart data to empty arrays or display a message
+              dailyChart.data.labels = ['No Data Available'];
+              dailyChart.data.datasets[0].data = [0];
+            } else {
+              dailyChart.data.labels = labels;
+              dailyChart.data.datasets[0].data = revenue;
+            }
+            dailyChart.update(); // Update the chart instance
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    };
+
+    // Mặc định chọn tháng hiện tại
+    const currentMonth = new Date().getMonth() + 1; // Tháng bắt đầu từ 0 nên cần cộng thêm 1
+    document.getElementById('reportMonth').value = currentMonth;
+    // Kích hoạt sự kiện onchange để cập nhật biểu đồ cho tháng hiện tại
+    document.getElementById('reportMonth').dispatchEvent(new Event('change'));
+
+
+    // Tự động tải báo cáo tháng khi tải trang
+    document.getElementById('reportType').dispatchEvent(new Event('change'));
+
+    // Fetch and render room category booking count chart
+    fetch('/admin/api/roomCategoryBookingCount')
+      .then(response => response.json())
+      .then(data => {
+        const ctx = document.getElementById('roomCategoryChart').getContext('2d');
+        const labels = data.map(item => item.Room_category.name);
+        const bookingCounts = data.map(item => item.totalQuantity);
+
+        roomCategoryChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Số lần đặt phòng',
+              data: bookingCounts,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.4)',
+                'rgba(54, 162, 235, 0.4)',
+                'rgba(255, 206, 86, 0.4)',
+                'rgba(75, 192, 192, 0.4)',
+                'rgba(153, 102, 255, 0.4)',
+                'rgba(255, 159, 64, 0.4)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Thông kê số lần phòng được đặt',
+                color: 'black',
+                font: {
+                  size: 13
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching room category booking count data:', error));
+    // Fetch and render service booking count chart
+    fetch('/admin/api/getServiceBookingCount')
+      .then(response => response.json())
+      .then(data => {
+        const ctx = document.getElementById('serviceBookingChart').getContext('2d');
+        const labels = data.map(item => item.Service.name);
+        const bookingCounts = data.map(item => item.totalQuantity);
+
+        serviceBookingChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Số lần đặt dịch vụ',
+              data: bookingCounts,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.4)',
+                'rgba(54, 162, 235, 0.4)',
+                'rgba(255, 206, 86, 0.4)',
+                'rgba(75, 192, 192, 0.4)',
+                'rgba(153, 102, 255, 0.4)',
+                'rgba(255, 159, 64, 0.4)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Thông kê số lần đặt dịch vụ',
+                color: 'black',
+                font: {
+                  size: 13
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching service booking count data:', error));
+  </script>
+</body>
+
+</html>
+</script>
+</body>
+
+</html>

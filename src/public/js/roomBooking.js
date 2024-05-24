@@ -59,19 +59,20 @@ const createRoomSelectItem = (item, number) => {
 
 const handleValidateData = () => {
     if (!dateInput.value) {
-        alert("bạn phải nhập check in");
+        alert("Bạn phải nhập check in");
         return false;
     }
     if (!dateOutput.value) {
-        alert("bạn phải nhập check out");
+        alert("Bạn phải nhập check out");
         return false;
     }
-    const roomSelectItemsCount =
-        roomSelectItemList.querySelectorAll(".room_select_item").length;
-    if (roomSelectItemsCount < 1) {
-        alert("bạn phải chọn ít nhất 1 phòng");
+    
+    const roomSelectItems = roomSelectItemList.querySelectorAll(".room_select_item");
+    if (roomSelectItems.length < 1) {
+        alert("Bạn phải chọn ít nhất 1 phòng");
         return false;
     }
+
     return true;
 };
 
@@ -116,7 +117,13 @@ roomItems.forEach((roomItem) => {
     console.log(item);
     const roomNumber = roomItem.querySelector(".room-number");
     roomNumber.onchange = (e) => {
-        const value = e.target.value;
+        const value = Number(e.target.value);
+        if (!Number.isInteger(value) ) {
+            alert("Số phòng phải là số nguyên dương");
+            e.target.value = 0; // Reset to a valid value
+            return;
+        }
+
         roomSelectItemList
             .querySelector(`.room_select_item[data-id='${item.id}'`)
             ?.remove();

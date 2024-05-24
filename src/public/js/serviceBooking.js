@@ -5,7 +5,17 @@ selectElement.style.display = "block";
 var selectElement = document.querySelector("div.nice-select");
 // Đặt thuộc tính style để ẩn phần tử
 selectElement.style.display = "none";
+const moneyFormat = (money) => {
+  if (isNaN(money)) {
+    return "0 ₫"; // Trả về giá trị mặc định nếu không phải là số
+  }
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 
+  return formatter.format(money);
+};
 $("#closeModalButton").click(function () {
   // Đóng modal
   $("#exampleModal").modal("hide");
@@ -22,6 +32,7 @@ $(".detail-button").click(function () {
       // Xử lý phản hồi JSON từ server
       // Ví dụ: giả sử phản hồi trả về một mảng các phòng, bạn có thể thêm chúng vào modal
       var modalContent = "";
+      var total_booking_price = "";
 
       response.forEach(function (room) {
         modalContent += "<tr>";
@@ -31,10 +42,39 @@ $(".detail-button").click(function () {
         modalContent += "<td>" + room.quantity + "</td>";
         // Thêm các dòng khác tương ứng với các thuộc tính của phòng
         modalContent += "</tr>";
+        total_booking_price = room.total_price;
       });
       // Thêm nội dung vào modal
       $("#detail_room_list").html(modalContent);
+      $("#total_booking_price").html(total_booking_price);
       // Mở modal
+      // $("#exampleModal").modal("show");
+    },
+    error: function (xhr, status, error) {
+      console.error(error);
+      // Xử lý lỗi nếu cần
+    },
+  });
+  $.ajax({
+    url: "/serviceDetail/" + id,
+    type: "GET",
+    success: function (response) {
+      var modalContent = "";
+      var total_booking_price = 0;
+
+      response.forEach(function (service) {
+        modalContent += "<tr>";
+        modalContent += "<td>" + service.Service.name + "</td>";
+        modalContent += "<td>" + service.price + "</td>";
+        modalContent += "<td>" + service.quantity + "</td>";
+        modalContent += "<td class='d-none pricePerService'>" + service.total_price + "</td>";
+        modalContent += "<td>" + service.createdAt + "</td>";
+        modalContent += "<td><button type='button' class='btn btn-danger post-delete-service-btn' data-service-id='" + service.id + "'><i class='ti ti-trash'></i></button></td>";
+        modalContent += "</tr>";
+        total_booking_price += service.total_price;
+      });
+      $("#detail_service_list").html(modalContent); // Ensure you have a section to display service details
+      $("#total_service_price").html(moneyFormat(total_booking_price));
       $("#exampleModal").modal("show");
     },
     error: function (xhr, status, error) {
@@ -43,19 +83,42 @@ $(".detail-button").click(function () {
     },
   });
 });
+function updateTotalBookingPrice(newTotalBookingPrice) {
+  $("#total_service_price").html(moneyFormat(newTotalBookingPrice));
+}
+$(document).on("click", ".post-delete-service-btn", async function () {
+  var serviceId = $(this).data("service-id");
+  var row = $(this).closest("tr");
+  try {
+    const response = await fetch(`/api/deleteService/${serviceId}`, {
+      method: 'POST',
+    });
+    
+    if (response.ok) {
+      // Hiển thị hộp thoại confirm
+      var confirmDelete = confirm("Bạn có chắc chắn huỷ dịch vụ không?");
+      // Nếu người dùng đồng ý xoá
+      if (confirmDelete) {
+        alert("Huỷ dịch vụ thành công!");
+        // Xóa hàng đó khỏi DOM
+        row.remove();
+        var currentTotalBookingPrice = parseFloat($("#total_service_price").text().replace(/\D/g, ''));
+        // Lấy giá trị dịch vụ vừa xoá
+        var deletedServicePrice = parseFloat(row.find(".pricePerService").text().replace(/\D/g, ''));
+        // Cập nhật lại tổng số tiền sau khi xoá dịch vụ
+        var newTotalBookingPrice = currentTotalBookingPrice - deletedServicePrice;
+        updateTotalBookingPrice(newTotalBookingPrice);
+      }
+      // Nếu người dùng bấm "Cancel", không thực hiện gì cả
+    } else {
+      console.error('Xóa dịch vụ không thành công');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 $(document).ready(function () {
-  const moneyFormat = (money) => {
-    if (isNaN(money)) {
-      return "0 ₫"; // Trả về giá trị mặc định nếu không phải là số
-    }
-    const formatter = new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-
-    return formatter.format(money);
-  };
   // Khai báo biến để lưu tổng số tiền
   var totalAmount = 0;
 
@@ -233,12 +296,12 @@ $(document).ready(function () {
       });
       selectedServices = [];
       updateSelectedServicesList();
-      
+
       alert("Đặt dịch vụ thành công!");
-      
+
       // Xử lý phản hồi từ server nếu cần
       $("#order-service-modal").modal("hide");
-      console.log(response); // In ra phản hồi từ server
+      // console.log(response); // In ra phản hồi từ server
       // Đóng modal sau khi đặt dịch vụ thành công
     } catch (error) {
       console.error(error); // Xử lý lỗi nếu có

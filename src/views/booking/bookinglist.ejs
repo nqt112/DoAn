@@ -4,89 +4,210 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
+  <title>Quản lý đơn đặt</title>
   <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
   <link rel="stylesheet" href="/css/styles.min.css" />
   <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
+<style>
+  <style>.status-wait {
+    color: gray;
+  }
+
+  .status-confirm {
+    color: blue;
+  }
+
+  .status-checkin {
+    color: green;
+  }
+
+  .status-checkout {
+    color: orange;
+  }
+
+  .status-cancel {
+    color: red;
+  }
+</style>
+
+</style>
 
 <body>
-  <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <!-- Sidebar Start -->
     <%- include('../_partialView/asideAdmin.ejs') %>
+      <div class="body-wrapper">
+        <%- include('../_partialView/headerAdmin.ejs') %>
+          <div class="container-fluid">
+            <h3>Quản lý đơn đặt</h3>
+            <div class="card">
+              <div class="card-body">
+                <a href="/admin/service/createService">
+                  <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button>
+                </a>
+                <div class="row mb-2">
+                  <div class="col-md-2 mb-2">
+                    <select class="form-select" id="statusFilter" name="status">
+                      <option value="">Tất cả</option>
+                      <% Object.keys(bookingStatus).forEach(function(key) { %>
+                        <option value="<%= bookingStatus[key] %>">
+                          <%= bookingStatus[key] %>
+                        </option>
+                        <% }) %>
+                    </select>
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <input type="date" class="form-control" id="startDateFilter" name="startDate">
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <input type="date" class="form-control" id="endDateFilter" name="endDate">
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <button class="btn btn-primary w-100" id="reset-filters-btn">Xoá bộ lọc</button>
+                  </div>
+                </div>
 
-    <!--  Sidebar End -->
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-      <!--  Header Start -->
-    <%- include('../_partialView/headerAdmin.ejs') %>
-      
-      <!--  Header End -->
-      <div class="container-fluid">
-        <div class="container-fluid">
-          <h3>Quản lý đơn đặt</h3>
-          <div class="card">
-            <div class="card-body">
-             <a href="/admin/service/createService"> <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button></a>
-              
-
-              <div class=" table-responsive">
-                <table class="table table-hover ">
-                  <thead>
-                    <tr class="table-active">
-                      <th scope="col">Người đặt</th>
-                      <th scope="col">Tổng tiền</th>
-                      <th scope="col">Checkin</th>
-                      <th scope="col">CheckOut</th>
-                      <th scope="col">Ngày tạo</th>
-                      <th scope="col">Trạng thái</th>
-                      <th scope="col">Hành động</th>
-
-                    </tr>
-                  </thead>
-                  <tbody> 
-
-                    <% bookingList.forEach(function(item, index){ %>
-                      <tr>
-                        <td><%= item.User.fullname %></td>
-                        <td><%= item.total_price %></td>
-                        <td><%= item.checkIn %> </td>
-                        <td><%= item.checkOut %> </td>
-                        <td><%= item.createdAt %> </td>
-                        <td><%= item.status %> </td>
-                        <td>
-                          <form  class="mb-1"  action="/admin/service/updateService/<%= item.id%>"  method="GET">
-                            <button type="submit"  class="btn btn-outline-warning"><i class="ti ti-pencil"></i></button>
-                          </form>
-                          <form  class="mb-1"  action=""  method="GET">
-                            <button type="submit"  class="btn btn-outline-warning">Chi tiết</button>
-                          </form>
-                          <form style="display: inline;" action="/admin/service/delete-service/<%= item.id%>"  method="POST">
-                            <button type="submit" class="btn btn-outline-danger"><i class="ti ti-trash"></i></button>
-                            <!-- <input type="text" hidden value="<%= item.id%>" name="id" /> -->
-                          </form>
-                        </td>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr class="table-active">
+                        <th scope="col">Người đặt</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Checkin</th>
+                        <th scope="col">CheckOut</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Hành động</th>
                       </tr>
-                    <% }) %>
-                    
-                  </tbody>
-                  
-                </table>
+                    </thead>
+                    <tbody id="bookingTableBody">
+                      <!-- Dynamic content will be injected here -->
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              
             </div>
+
+            <div id="pagination-container" class="pagination d-flex justify-content-center">
+              <!-- Nút phân trang sẽ được chèn vào đây -->
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thông tin đặt phòng</h5>
+                    <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal"
+                      aria-label="Close">
+                      <i class="ti ti-x"></i>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <section class="room-details-section spad">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <h4 class="pb-1 font-weight-bold" id="exampleModalLabel">Chi tiết phòng đặt</h4>
+                            <table class="table align-middle table-bordered room_list">
+                              <thead class="table">
+                                <tr>
+                                  <th scope="col">Loại phòng</th>
+                                  <th scope="col">Số người tối đa</th>
+                                  <th scope="col">Giá phòng</th>
+                                  <th scope="col">Số lượng phòng</th>
+                                </tr>
+                              </thead>
+                              <tbody id="detail_room_list">
+                                <!-- Render booking detail -->
+                              </tbody>
+
+                            </table>
+                            <div class="d-inline-block">
+                              <h5 class="mb-2 mt-0 ">Tổng tiền phòng: <span id="total_booking_price"></span></h5>
+                            </div>
+
+                          </div>
+                        </div>
+                        <div class="row">
+
+                          <div class="col-lg-12">
+                            <h4 class="pb-1 font-weight-bold" id="exampleModalLabel">Chi tiết dịch vụ đã đặt</h4>
+                            <table class="table align-middle table-bordered room_list">
+                              <thead class="table">
+                                <tr>
+                                  <th scope="col">Tên dịch vụ</th>
+                                  <th scope="col">Giá dịch vụ</th>
+                                  <th scope="col">Số lượng</th>
+                                  <th scope="col">Ngày tạo</th>
+                                  <th scope="col"></th>
+
+                                </tr>
+                              </thead>
+                              <tbody id="detail_service_list">
+                                <!-- Render booking detail -->
+                              </tbody>
+
+                            </table>
+                            <div class="d-inline-block">
+                              <h5 class="mb-2 mt-0 ">Tổng tiền dịch vụ: <span id="total_service_price"></span></h5>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer" id="insertPrintBtn">
+                        
+                    </div>
+                    </section>
+                  </div>
+                </div>
+               
+              </div>
+
+            </div>
+
           </div>
-        </div>
+          
       </div>
-    </div>
   </div>
+
   <script src="/libs/jquery/dist/jquery.min.js"></script>
   <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/sidebarmenu.js"></script>
   <script src="/js/app.min.js"></script>
   <script src="/libs/simplebar/dist/simplebar.js"></script>
+
+  <script src="/js/handleAdminBooking.js"></script>
+
+  <script src="/js/html2canvas.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+
+  
+  <!-- const path = require('path');
+  const db = require("../models/index");   -->
+  <script>
+$(document).on("click", "#printInvoiceBtn", function () {
+    var bookingId = $(this).data("booking-id");
+
+    $.ajax({
+        url: "/admin/printInvoice/" + bookingId,
+        type: "GET",
+        success: function (response) {
+            alert(response);
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+            alert("Đã xảy ra lỗi trong quá trình in hóa đơn.");
+        }
+    });
+});
+
+  </script>
+
 </body>
 
 </html>

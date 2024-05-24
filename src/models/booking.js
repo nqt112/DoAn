@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
                 onUpdate: 'CASCADE',
             });
             Booking.hasMany(models.Booking_service, { foreignKey: "bookingId" });
-            // Booking.belongsTo(models.Day_room, { foreignKey: "bookingId" });
+            Booking.hasMany(models.Day_room, { foreignKey: "bookingId" });
+            Booking.hasOne(models.Export_invoice, { foreignKey: "bookingId" });
         }
     }
     Booking.init(

@@ -69,9 +69,13 @@ const initWebRoutes = (app) => {
     );
     router.get("/bookingDetail/:id", bookingController.getModalDetail)
 
+    router.get("/serviceDetail/:id", bookingController.getBookingServiceDetail)
+
     router.get("/api/serviceList", bookingController.getServiceList)    
 
     router.post("/api/bookingService",bookingController.postBookingService)
+    
+    router.post("/api/deleteService/:id",bookingController.postDeleteService)
 
     // câu truy vấn test lấy ra dữ liệu booking cùng booking detail và các bảng liên quan.
     router.get("/roomBooking/:id", async (req, res) => {

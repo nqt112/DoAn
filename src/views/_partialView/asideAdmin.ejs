@@ -1,3 +1,14 @@
+<script>
+  async function loadOverviewContent() {
+      try {
+          const response = await fetch('/overview-content');
+          const content = await response.text();
+          document.getElementById('content').innerHTML = content;
+      } catch (error) {
+          console.error('Error loading content:', error);
+      }
+  }
+</script>
 <aside class="left-sidebar">
     <!-- Sidebar scroll-->
     <div>
@@ -14,14 +25,14 @@
         <ul id="sidebarnav">
           <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">Home</span>
+            <span class="hide-menu">Trang chủ</span>
           </li>
           <li class="sidebar-item">
-            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+            <a class="sidebar-link" href="/admin/" aria-expanded="false">
               <span>
                 <i class="ti ti-layout-dashboard"></i>
               </span>
-              <span class="hide-menu">Dashboard</span>
+              <span class="hide-menu">Báo cáo tổng quan</span>
             </a>
           </li>
           <li class="nav-small-cap">
@@ -29,6 +40,18 @@
             <span class="hide-menu">Danh mục quản lý</span>
           </li>
           <li class="sidebar-item">
+            <a class="sidebar-link" href="/admin/dayroom/dayroomlist" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Quản lý phòng ngày</span>
+            </a>
+            <a class="sidebar-link" href="/admin/booking/bookinglist" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Quản lý đơn đặt</span>
+            </a>
             <a class="sidebar-link" href="/admin/user/userlist" aria-expanded="false">
               <span>
                 <i class="ti ti-file-description"></i>
@@ -53,12 +76,7 @@
               </span>
               <span class="hide-menu">Quản lý dịch vụ</span>
             </a>
-            <a class="sidebar-link" href="/admin/booking/bookinglist" aria-expanded="false">
-              <span>
-                <i class="ti ti-file-description"></i>
-              </span>
-              <span class="hide-menu">Quản lý đơn đặt</span>
-            </a>
+          
           </li>
           
         </ul>

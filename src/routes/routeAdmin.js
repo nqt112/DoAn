@@ -4,10 +4,13 @@ import categoryController from '../controller/categoryController';
 import roomController from '../controller/roomController';
 import serviceController from '../controller/serviceController';
 import bookingController from '../controller/bookingController';
+import dayroomController from '../controller/dayroomController'
+import invoiceController from '../controller/invoiceController'
 import express from 'express';
 import appRoot from 'app-root-path';
 import path from 'path';
 import multer from 'multer';
+import { invalid } from 'moment';
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -29,7 +32,7 @@ const imageFilter = function(req, file, cb) {
 let upload = multer({ storage: storage, fileFilter: imageFilter });
 
 const initAdminRoutes = (app) => {
-    router.get('/',adminController.getAdminPage)
+    router.get('/',invoiceController.getOverviewPage)
     
     router.get('/user/userlist',userController.getUserList)
     router.post('/user/create-new-user',userController.createNewUser)
@@ -59,7 +62,39 @@ const initAdminRoutes = (app) => {
     router.get('/service/updateService/:id', serviceController.getUpdateServicePage)
     router.post('/service/update-service/:id', upload.single('image'), serviceController.updateService)
 
-    router.get('/booking/bookinglist',bookingController.getBookingList)
+    router.get('/booking/bookinglist',bookingController.getAdminBookingList)
+    router.get('/api/getBookingListStatus',bookingController.getBookingListStatus)
+    router.post('/postConfirmBooking',bookingController.postConfirmBooking)
+    router.post('/postCheckinBooking',bookingController.postCheckinBooking)
+    router.post('/postCheckoutBooking',bookingController.postCheckoutBooking)
+    router.post('/postCancelBooking',bookingController.postCancelBooking)
+
+    router.get('/dayroom/dayroomlist',dayroomController.getDayroom)
+    router.get('/api/dayRoomStatus',dayroomController.getAllRoomStatus)
+
+    router.get("/bookingDetail/:id", bookingController.getModalDetail)
+    router.get("/serviceDetail/:id", bookingController.getBookingServiceDetail)
+
+    router.get("/printInvoice/:bookingId",invoiceController.printInvoice)
+
+    router.get("/api/revenue/monthly",invoiceController.getRevenueMonthly)
+    router.get("/api/revenue/yearly",invoiceController.getRevenueYearly)
+    router.get("/api/revenue/daily",invoiceController.getRevenueDate)
+
+    router.get("/api/roomCategoryBookingCount", invoiceController.getRoomCategoryBookingCount)
+    router.get("/api/getServiceBookingCount", invoiceController.getServiceBookingCount)
+
+    router.get("/printInvoice",(req, res, next) =>{
+        const stream = res.writeHead(200,{
+            'Content-Type' : 'application/pdf',
+            'content-disposition' : 'attachment; filename = invoice.pdf',
+        })
+        invoiceController.buildPDF(
+            (chunk) => stream.write(chunk),
+            () => stream.end()
+        )
+    })
+
 
     router.get('/test', (req, res) => {
         return res.render('./user/createUser.ejs')

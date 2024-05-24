@@ -3,7 +3,7 @@ const BookingStatusEnum = {
     CONFIRM: "Đã xác nhận",
     CHECKIN: "Đã checkin",
     CHECKOUT: "Đã checkout",
-    CANCEL: "Huỷ",
+    CANCEL: "Đã huỷ",
 };
 
 export default BookingStatusEnum;

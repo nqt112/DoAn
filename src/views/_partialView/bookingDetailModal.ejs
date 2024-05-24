@@ -1,0 +1,125 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thông tin đặt phòng</h5>
+        <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+        </div>
+        <div class="modal-body">
+        <section class="room-details-section spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="pb-1 font-weight-bold" id="exampleModalLabel">Chi tiết phòng đặt</h4>
+                        <table class="table align-middle table-bordered room_list">
+                            <thead class="table">
+                                <tr>
+                                    <th scope="col">Loại phòng</th>
+                                    <th scope="col">Số người tối đa</th>
+                                    <th scope="col">Giá phòng</th>
+                                    <th scope="col">Số lượng phòng</th>
+                                </tr>
+                            </thead>
+                                <tbody id= "detail_room_list">
+                                <!-- Render booking detail -->
+                                </tbody>
+
+                        </table>
+                <div class="d-inline-block" >
+                    <h5 class="mb-2 mt-0 ">Tổng tiền phòng: <span id="total_booking_price"></span></h5>
+                </div> 
+
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="col-lg-12">
+                        <h4 class="pb-1 font-weight-bold" id="exampleModalLabel">Chi tiết dịch vụ đã đặt</h4>
+                        <table class="table align-middle table-bordered room_list">
+                            <thead class="table">
+                                <tr>
+                                    <th scope="col">Tên dịch vụ</th>
+                                    <th scope="col">Giá dịch vụ</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Ngày tạo</th>
+                                    <th scope="col"></th>
+
+                                </tr>
+                            </thead>
+                                <tbody id= "detail_service_list">
+                                <!-- Render booking detail -->
+                                </tbody>
+
+                        </table>
+                        <div class="d-inline-block" >
+                            <h5 class="mb-2 mt-0 ">Tổng tiền dịch vụ: <span id="total_service_price"></span></h5>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="modal fade" id="order-service-modal" tabindex="-1" aria-labelledby="order-service-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="order-service-modal-label">Đặt dịch vụ</h5>
+                <button type="button" id="closeServiceModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="ti ti-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div>
+                                <div>
+                                    <label for="service-dropdown" class="form-label">Chọn dịch vụ:</label>
+                                </div>
+                                <div class="form-select">
+                                    <select class="nice-select form-select" id="service-dropdown">
+                                        <option selected focus disabled>Chọn dịch vụ</option>
+                                        <!-- Thêm các tùy chọn dịch vụ vào đây -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Số lượng:</label>
+                            <input type="number" class="form-control" id="quantity" value="1" min="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary " id="add-service-btn">Thêm dịch vụ</button>
+                </div>
+                <div class="mt-3">
+                    <h6 class="mb-2">Danh sách dịch vụ đã chọn:</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tên dịch vụ</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Giá</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="selected-services-list">
+                            <!-- Danh sách dịch vụ đã chọn sẽ được hiển thị ở đây -->
+                        </tbody>
+                    </table>
+                </div>
+                <span>Tổng tiền: <div class="d-inline-block" id="total-amount"></div> </span>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirm-order-btn">Xác nhận đặt dịch vụ</button>
+            </div>
+        </div>
+    </div>
+</div>

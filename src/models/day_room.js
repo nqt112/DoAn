@@ -12,13 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Day_room.belongsTo(models.Room,{foreignKey: 'roomId'});
       Day_room.belongsTo(models.Booking_detail,{foreignKey: 'bookingDetailId'});
-      // Day_room.hasMany(models.Booking,{foreignKey: 'bookingId'});
+      Day_room.belongsTo(models.Booking,{foreignKey: 'bookingId'});
     }
   }
   Day_room.init({
     roomId: DataTypes.INTEGER,
     bookingDetailId: DataTypes.INTEGER,
-    status: DataTypes.STRING
+    bookingId: DataTypes.INTEGER,
+    status: DataTypes.STRING,
+    date: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Day_room',
