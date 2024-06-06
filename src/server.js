@@ -20,7 +20,7 @@ app.use (cookieParser('secret'));
 
 //config session
 app.use (session({
-  cookie: {maxAge: 240000},
+  cookie: {maxAge: 480000},
   secret: 'secret',
   resave: true,
   saveUninitialized: false

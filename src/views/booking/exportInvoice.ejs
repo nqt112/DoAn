@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý hoá đơn xuất</title>
+  <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
+  <link rel="stylesheet" href="/css/styles.min.css" />
+  <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
+</head>
+
+<body>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%- include('../_partialView/asideAdmin.ejs') %>
+      <div class="body-wrapper">
+        <%- include('../_partialView/headerAdmin.ejs') %>
+          <div class="container-fluid">
+            <h3>Quản lý hoá đơn xuất</h3>
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-2 mb-2">
+                    <input type="date" class="form-control" id="startDateFilter" name="startDate">
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <input type="date" class="form-control" id="endDateFilter" name="endDate">
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <button class="btn btn-primary w-100" id="reset-filters-btn">Xoá bộ lọc</button>
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <button type="button" class="btn btn-outline-success mb-1" id="exportExcelBtn">In ra Excel</button>
+                  </div>
+                </div>
+                <div>
+                  <!-- Filter Form Start -->
+                  <!-- Filter Form End -->
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr class="table-active">
+                        <th scope="col">Mã hoá đơn</th>
+                        <th scope="col">Mã đơn đặt</th>
+                        <th scope="col">Khách hàng</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Ngày xuất</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="invoiceTableBody">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sidebarmenu.js"></script>
+  <script src="/js/app.min.js"></script>
+  <script src="/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/js/handleAdminBooking.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+  // Gọi hàm loadInvoices() khi trang web được tải lần đầu
+  loadInvoices();
+
+  // Gọi hàm loadInvoices() khi người dùng thay đổi giá trị của các ô input ngày
+  $('#startDateFilter, #endDateFilter').on('change', loadInvoices);
+
+  // Gán sự kiện click cho nút in Excel
+  $('#exportExcelBtn').click(exportInvoicesToExcel);
+
+  // Gán sự kiện click cho nút xoá bộ lọc
+  $('#reset-filters-btn').click(function () {
+    $('#startDateFilter').val('');
+    $('#endDateFilter').val('');
+    loadInvoices(); // Gọi loadInvoices() sau khi xoá bộ lọc
+  });
+});
+
+// Hàm loadInvoices() được sử dụng để gửi yêu cầu AJAX và cập nhật bảng đơn đặt
+function loadInvoices() {
+  const startDate = $('#startDateFilter').val();
+  const endDate = $('#endDateFilter').val();
+  
+  let url = '/admin/api/exportInvoice';
+
+  // Thêm tham số ngày lọc vào URL nếu có
+  if (startDate && endDate) {
+    url += `?startDate=${startDate}&endDate=${endDate}`;
+  }
+
+  $.ajax({
+    url: url,
+    method: 'GET',
+    dataType: 'json',
+    success: function (data) {
+      const invoiceTableBody = $('#invoiceTableBody');
+      invoiceTableBody.empty(); // Xoá các dòng hiện có trong bảng
+
+      // Tạo các dòng mới dựa trên dữ liệu trả về
+      data.forEach(invoice => {
+        const booking = invoice.Booking;
+        const user = booking.User;
+
+        const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(invoice.total_price);
+
+        const row = `
+          <tr>
+            <td class="d-none">${invoice.Booking.id}</td>
+            <td>${invoice.invoice_code}</td>
+            <td>${invoice.Booking.code}</td>
+            <td>${user.fullname}</td>
+            <td>${formattedPrice}</td>
+            <td>${new Date(invoice.export_day).toLocaleDateString()}</td>
+            <td><button type="button" class="mb-1 btn btn-outline-primary " id="printInvoiceBtn" data-booking-id="${invoice.Booking.id}">
+        In hoá đơn
+  </button></td>
+          </tr>
+        `;
+
+        invoiceTableBody.append(row);
+      });
+    },
+    error: function (error) {
+      console.error('Error fetching invoices:', error);
+    }
+  });
+}
+
+// Hàm exportInvoicesToExcel() để gửi yêu cầu xuất Excel dựa trên các ngày lọc
+function exportInvoicesToExcel() {
+  const startDate = $('#startDateFilter').val();
+  const endDate = $('#endDateFilter').val();
+  let url = '/admin/api/exportInvoiceToExcel';
+
+  // Thêm tham số ngày lọc vào URL nếu có
+  if (startDate && endDate) {
+    url += `?startDate=${startDate}&endDate=${endDate}`;
+  }
+
+  // Chuyển hướng trình duyệt đến URL xuất Excel
+  window.location.href = url;
+}
+
+  </script>
+  
+  <script>
+    $(document).on("click", "#printInvoiceBtn", function () {
+        var bookingId = $(this).data("booking-id");
+    
+        $.ajax({
+            url: "/admin/printInvoice/" + bookingId,
+            type: "GET",
+            success: function (response) {
+                alert("In hoá đơn thành công!");
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                alert("Đã xảy ra lỗi trong quá trình in hóa đơn.");
+            }
+        });
+    });
+    
+      </script>
+</body>
+
+</html>

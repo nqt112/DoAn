@@ -12,15 +12,15 @@ module.exports = {
       roomId: {
         type: Sequelize.INTEGER
       },
-      bookingDetailId: {
-        type: Sequelize.INTEGER
-      },
+      // bookingDetailId: {
+      //   type: Sequelize.INTEGER
+      // },
       bookingId: {
         type: Sequelize.INTEGER
       },
-      status: {
-        type: Sequelize.STRING
-      },
+      // status: {
+      //   type: Sequelize.STRING
+      // },
       date: {
         type: Sequelize.DATEONLY
       },

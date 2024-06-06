@@ -1,14 +1,36 @@
 import db from "../models/index";
 import bcryptjs from 'bcryptjs';
 
+const moneyFormat = (money) => {
+    if (isNaN(money)) {
+      return "0 ₫"; // Trả về giá trị mặc định nếu không phải là số
+    }
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return formatter.format(money);
+  };
 let getHomePage = async(req, res) => {
-    let categoryList = await db.Room_category.findAll({
+    let category = await db.Room_category.findAll({
         // include: {model: db.Room_category, attributes: ['id','name'],},
         raw: true,
         nest:true,
     })
+    const categoryList = category.map((booking) => {
+        return {
+          ...booking,
+          price: moneyFormat(booking.price),
+        };
+      });
+      let service = await db.Service.findAll({
+        // include: {model: db.Room_category, attributes: ['id','name'],},
+        attributes: ['id','name','description','image'],
+        raw: true,
+        nest:true,
+    })
     return res.render('home.ejs', {
-        user: req.user, categoryList
+        user: req.user, categoryList, service
     });
 }
 let getDetailPage = async (req, res) => {
@@ -54,12 +76,18 @@ let postUserDetail = async (req, res) => {
 }
 let getRoomDetail = async (req, res) => {
     let id = req.params.id;
-    let categoryList = await db.Room_category.findAll({
+    let category = await db.Room_category.findAll({
         // include: {model: db.Room_category, attributes: ['id','name'],},
         where: {id: id},
         raw: true,
         nest:true,
     })
+    const categoryList = category.map((booking) => {
+        return {
+          ...booking,
+          price: moneyFormat(booking.price),
+        };
+      });
     return res.render('./roomDetail.ejs',{
         user: req.user, categoryList: categoryList});
 }

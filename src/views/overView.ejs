@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
+  <title>Tổng quan</title>
   <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
   <link rel="stylesheet" href="/css/styles.min.css" />
   <link rel="stylesheet" href="/css/nice-select.css">
@@ -222,8 +222,10 @@
         .then(response => response.json())
         .then(data => {
           const labels = data.map(item => {
-            const day = new Date(item.Export_day).toLocaleDateString('vi-VN', { day: 'numeric' });
-            return day;
+            const date = new Date(item.Export_day);
+            const day = date.toLocaleDateString('vi-VN', { day: 'numeric' });
+            const month = date.toLocaleDateString('vi-VN', { month: 'numeric' });
+            return `${day}/${month}`;
           });
           const revenue = data.map(item => item.totalRevenue);
 

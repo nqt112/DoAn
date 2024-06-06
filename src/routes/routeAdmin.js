@@ -71,11 +71,20 @@ const initAdminRoutes = (app) => {
 
     router.get('/dayroom/dayroomlist',dayroomController.getDayroom)
     router.get('/api/dayRoomStatus',dayroomController.getAllRoomStatus)
+    router.get('/api/getAvailableRooms',dayroomController.getAvailableRooms)
+    router.post('/postUpdateDayroom',dayroomController.postUpdateDayroom)
+    router.get('/api/getBookingId', dayroomController.getBookingId)
+    router.get('/api/getBookedRooms', dayroomController.getBookedRooms)
+
+
 
     router.get("/bookingDetail/:id", bookingController.getModalDetail)
     router.get("/serviceDetail/:id", bookingController.getBookingServiceDetail)
-
+    
+    router.get("/booking/exportInvoice", invoiceController.getExportInvoicePage)
     router.get("/printInvoice/:bookingId",invoiceController.printInvoice)
+    router.get("/api/exportInvoice", invoiceController.getExportInvoice)
+    router.get("/api/exportInvoiceToExcel", invoiceController.exportInvoiceToExcel)
 
     router.get("/api/revenue/monthly",invoiceController.getRevenueMonthly)
     router.get("/api/revenue/yearly",invoiceController.getRevenueYearly)
@@ -83,6 +92,9 @@ const initAdminRoutes = (app) => {
 
     router.get("/api/roomCategoryBookingCount", invoiceController.getRoomCategoryBookingCount)
     router.get("/api/getServiceBookingCount", invoiceController.getServiceBookingCount)
+
+    // router.get("/api/getAvailableRooms", invoiceController.getAvailableRooms)
+
 
     router.get("/printInvoice",(req, res, next) =>{
         const stream = res.writeHead(200,{

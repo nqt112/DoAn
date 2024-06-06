@@ -4,10 +4,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
+  <title>Quản lý dịch vụ</title>
   <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
   <link rel="stylesheet" href="/css/styles.min.css" />
   <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
+
 </head>
 
 <body>
@@ -50,7 +51,7 @@
                       <tr>
                         <td><img src= "/image/uploadFile/<%= item.image %>" width="200" height="150" /></td>
                         <td><%= item.name %></td>
-                        <td><%= item.price %> VNĐ</td>
+                        <td><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price) %></td>
                         <td style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;"><%= item.description %></td>
                         <!-- <td><%= item.image %></td> -->
 

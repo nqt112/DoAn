@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Booking_detail.belongsTo(models.Booking,{foreignKey: 'bookingId'});
       Booking_detail.belongsTo(models.Room,{foreignKey: 'roomId'});
-      Booking_detail.hasMany(models.Day_room,{foreignKey: 'bookingDetailId'});
+      // Booking_detail.hasMany(models.Day_room,{foreignKey: 'bookingDetailId'});
       Booking_detail.belongsTo(models.Room_category,{foreignKey: 'roomCategoryId'});
     }
   }

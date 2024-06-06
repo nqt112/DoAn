@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
+  <title>Quản lý phòng ngày</title>
   <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
   <link rel="stylesheet" href="/css/styles.min.css" />
   <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
@@ -12,13 +12,11 @@
   <style>
     .card {
       margin: 2px;
-      /* Reduce margin between cards */
     }
 
     .row-cols-1>.col,
     .row-cols-md-6>.col {
       padding: 2px;
-      /* Reduce padding around cards */
     }
 
     .bg-danger {
@@ -31,37 +29,53 @@
 
     .card .text-center {
       font-weight: bold;
-      /* Adjust this value as needed */
+    }
+
+    .modal-body .form-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-body .form-group label {
+      flex: 1;
+      margin-right: 1rem;
+    }
+
+    .modal-body .form-group input,
+    .modal-body .form-group select {
+      flex: 2;
     }
   </style>
 </head>
 
 <body>
-  <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <!-- Sidebar Start -->
     <%- include('../_partialView/asideAdmin.ejs') %>
 
-      <!--  Sidebar End -->
-      <!--  Main wrapper -->
       <div class="body-wrapper">
-        <!--  Header Start -->
         <%- include('../_partialView/headerAdmin.ejs') %>
 
-          <!--  Header End -->
           <div class="container-fluid">
             <div class="container-fluid">
-              <h3>Quản lý phòng ngày  [<span id="current-date-time" style="font-size: 18px; font-weight: normal;"></span>]
+              <h3>Quản lý phòng ngày [<span id="current-date-time"
+                  style="font-size: 18px; font-weight: normal;"></span>]
               </h3>
               <div class="card">
                 <div class="card-body">
-                  <a href="/admin/service/createService"> <button type="button" class="btn btn-outline-danger mb-1">Thêm
-                      mới</button></a>
+                  <button type="button" id="updateRoomBtn" class="btn btn-outline-danger mb-1">Cập nhật phòng
+                    ngày</button>
 
                   <div class="container my-1">
                     <div class="row mb-4">
-
+                      <div class="col-md-2 mb-2">
+                        <input type="date" class="form-control dateInput" id="start-date" name="startDate">
+                      </div>
+                      <div class="col-md-2 mb-2">
+                        <input type="date" class="form-control dateOutput" id="end-date" name="endDate">
+                      </div>
                       <div class="col-md-2 mb-2">
                         <select class="form-select" id="floor-filter">
                           <option value="all" focus>Số tầng</option>
@@ -72,7 +86,6 @@
                         </select>
                       </div>
                       <div class="col-md-2 mb-2">
-
                         <select class="form-select" id="status-filter">
                           <option value="all">Tất cả phòng</option>
                           <option value="available">Phòng trống</option>
@@ -80,12 +93,6 @@
                         </select>
                       </div>
                       <div class="col-md-2 mb-2">
-                        <input type="date" class="form-control dateInput" id="start-date" name="startDate">
-                      </div>
-                      <div class="col-md-2 mb-2">
-                        <input type="date" class="form-control dateOutput" id="end-date" name="endDate">
-                      </div>
-                      <div class="col-md-2  mb-2">
                         <input type="text" class="form-control" id="search" placeholder="Tìm tên phòng">
                       </div>
                       <div class="col-md-2 mb-2 d-none">
@@ -94,183 +101,106 @@
                       <div class="col-md-2 mb-2">
                         <button class="btn btn-primary w-100" id="reset-filters-btn">Xoá bộ lọc</button>
                       </div>
-                      <div class="row row-cols-1 row-cols-md-5 " id="rooms-container">
-
-                        <!--                  
-                  <div class="col">
-                    <div class="card h-75">
-                        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-center">P-4004</div>
-                        <div class=" bg-success text-white d-flex align-items-center justify-content-center  d-flex flex-column ">
-                          <div class="text-center ">
-                            Nguyễn Quốc Trung
-                          </div>
-                          <div class="text-center d-inline-block">
-                            <div>
-                              <p class="card-text text-center">Checkin: <span>24-06-2023</span> </p>
-                            </div>
-                            <div>
-                              <p class="card-text text-center">Checkout: <span>24-06-2023</span> </p>
-                            </div>
-
-                          </div>
-                        </div>  
-                    </div>
-                  </div> -->
-
-                        <!-- Thêm các phòng khác tương tự -->
+                      <div class="row row-cols-1 row-cols-md-5" id="rooms-container">
                       </div>
-
                     </div>
-
                   </div>
-
                 </div>
               </div>
               <div id="pagination-container" class="d-flex justify-content-center mt-3">
+              </div>
 
+              <div class="modal fade" id="updateRoomModal" tabindex="-1" aria-labelledby="updateRoomModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateRoomModalLabel">Cập nhật phòng ngày</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-md-6 mb-2">
+                          <label for="bookingCode">Mã đơn đặt</label>
+                          <input type="text" class="form-control" id="bookingCodeInput" name="bookingCode">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                          <label for="modalStartDate">Ngày checkin</label>
+                          <input type="date" disabled class="form-control" id="modalStartDate" name="startDate">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                          <label for="modalEndDate">Ngày checkout</label>
+                          <input type="date" disabled class="form-control" id="modalEndDate" name="endDate">
+                        </div>
+                      </div>
+                      <input type="hidden" id="selectedRoomsInput" name="selectedRooms">
+                      <input type="hidden" id="bookingIdInput" name="bookingId">
+                      <div class="row">
+                        <div class="col-md-3 mb-2">
+                          <label for="roomType">Loại phòng</label>
+                          <select class="form-select" id="roomType">
+                            <% roomCategories.forEach(function(category) { %>
+                              <option value="<%= category.id %>">
+                                <%= category.name %>
+                              </option>
+                              <% }); %>
+                          </select>
+                        </div>
+                        <div class="col-md-3 mb-2 d-flex align-items-end">
+                          <button type="button" class="btn btn-primary w-100" id="filter-btn">Tìm kiếm</button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6" style="max-height: 300px; overflow-y: auto;">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Tên phòng</th>
+                                <th scope="col">Tầng</th>
+                              </tr>
+                            </thead>
+                            <tbody id="roomList"></tbody>
+                          </table>
+                        </div>
+                        <div class="col-md-6" style="max-height: 300px; overflow-y: auto;">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Các phòng đã chọn</th>
+                                <th scope="col"></th>
+                              </tr>
+                            </thead>
+                            <tbody id="selected-rooms-container"></tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                      <button type="button" class="btn btn-primary" id="postUpdateDayroom">Lưu</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
       </div>
-      <script src="/libs/jquery/dist/jquery.min.js"></script>
-      <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="/js/sidebarmenu.js"></script>
-      <script src="/js/app.min.js"></script>
-      <script src="/libs/simplebar/dist/simplebar.js"></script>
-      <script>
-        var dateInputs = document.getElementsByClassName("dateInput");
+  </div>
 
-        // Lấy tất cả các phần tử có class là "dateOutput"
-        var dateOutputs = document.getElementsByClassName("dateOutput");
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sidebarmenu.js"></script>
+  <script src="/js/app.min.js"></script>
+  <script src="/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/js/dayRoom.js"></script>
+  <script src="/js/handleUpdateDayroom.js"></script>
 
-        // Lấy ngày hiện tại
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-        var yyyy = today.getFullYear();
-        var todayString = yyyy + '-' + mm + '-' + dd;
+  <script>
+ 
 
-        // Thiết lập giá trị tối thiểu cho các input
-        for (var i = 0; i < dateInputs.length; i++) {
-          dateInputs[i].setAttribute("min", todayString);
-        }
-
-        // Kiểm tra khi có sự thay đổi trong input
-        for (var i = 0; i < dateInputs.length; i++) {
-          dateInputs[i].addEventListener("change", function () {
-            var selectedDate = new Date(this.value); // Ngày được chọn trong dateInput
-            var dd = String(selectedDate.getDate()).padStart(2, '0');
-            var mm = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-            var yyyy = selectedDate.getFullYear();
-            var selectedDateString = yyyy + '-' + mm + '-' + dd;
-
-            // Hiển thị ngày đã chọn trong phần tử dateOutput
-            for (var j = 0; j < dateOutputs.length; j++) {
-              dateOutputs[j].innerText = "Ngày đã chọn: " + selectedDateString;
-              dateOutputs[j].setAttribute("min", selectedDateString); // Giới hạn dateOutput từ ngày được chọn
-            }
-          });
-        }
-
-        // Hàm cập nhật ngày tháng hiện tại theo thời gian thực
-        function updateDateTime() {
-          var now = new Date();
-          var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-          var formattedDateTime = now.toLocaleDateString('vi-VN', options);
-          document.getElementById('current-date-time').textContent = formattedDateTime;
-        }
-
-        // Cập nhật ngày tháng hiện tại ngay khi trang được tải
-        updateDateTime();
-        // Cập nhật ngày tháng hiện tại mỗi giây
-        setInterval(updateDateTime, 1000);
-      </script>
-      <script>
-
-        $(document).ready(function () {
-          const fetchRooms = (page = 1) => {
-            const floor = $('#floor-filter').val();
-            const status = $('#status-filter').val();
-            const search = $('#search').val(); // Lấy giá trị tìm kiếm từ ô input
-            const startDate = $('#start-date').val(); // Lấy giá trị ngày bắt đầu
-            const endDate = $('#end-date').val(); // Lấy giá trị ngày kết thúc
-            const url = `/admin/api/dayRoomStatus?page=${page}&floor=${floor}&status=${status}&search=${search}&startDate=${startDate}&endDate=${endDate}`;
-            // Thêm vào đoạn mã JavaScript đã có
-
-            fetch(url)
-              .then(response => response.json())
-              .then(data => {
-                const rooms = data.rooms;
-                const total = data.total;
-                const roomsContainer = document.getElementById('rooms-container');
-                roomsContainer.innerHTML = '';
-
-                rooms.forEach(room => {
-                  let cardClass = '';
-                  let statusText = room.Status;
-
-                  if (room.Status === `<%- dayRoomStatus.CONTRONG %>`) {
-                    cardClass = 'bg-success';
-                  } else {
-                    cardClass = 'bg-danger';
-                    statusText = '';
-                  }
-
-                  const roomCard = `
-              <div class="col">
-                <div class="card h-100 ${cardClass}">
-                  <div class="card-header bg-primary text-white d-flex align-items-center justify-content-center">${room.RoomName}</div>
-                  <div class="text-white d-flex align-items-center justify-content-center flex-column" style="height: 100%;">
-                    <div class="text-center">${statusText}</div>
-                    ${room.CustomerName ? `<div class="text-center">${room.CustomerName}</div>` : ''}
-                    ${room.Checkin ? `<div class="text-center">Checkin: ${room.Checkin}</div>` : ''}
-                    ${room.Checkout ? `<div class="text-center">Checkout: ${room.Checkout}</div>` : ''}
-                  </div>
-                </div>
-              </div>
-            `;
-                  roomsContainer.insertAdjacentHTML('beforeend', roomCard);
-                });
-
-                // Thêm logic phân trang
-                const paginationContainer = document.getElementById('pagination-container');
-                paginationContainer.innerHTML = '';
-                const totalPages = Math.ceil(total / 10);
-                for (let i = 1; i <= totalPages; i++) {
-                  const pageButton = `<button class="m-1 btn btn-secondary pagination-btn" data-page="${i}">${i}</button>`;
-                  paginationContainer.insertAdjacentHTML('beforeend', pageButton);
-                }
-              })
-              .catch(error => {
-                console.error('Error fetching rooms:', error);
-              });
-          };
-
-          $('#floor-filter').on('change', () => fetchRooms());
-          $('#status-filter').on('change', () => fetchRooms());
-          $('#search-btn').on('click', () => fetchRooms());
-          $('#start-date, #end-date').on('change', () => fetchRooms());
-          $('#search').on('change', () => fetchRooms());
-
-          $(document).on('click', '.pagination-btn', function () {
-            const page = $(this).data('page');
-            fetchRooms(page);
-          });
-
-          // Reset filters
-          $('#reset-filters-btn').on('click', function () {
-            $('#floor-filter').val('all');
-            $('#status-filter').val('all');
-            $('#search').val('');
-            $('#start-date').val('');
-            $('#end-date').val('');
-            fetchRooms(); // Fetch rooms with default values
-          });
-
-          fetchRooms();
-        });
-      </script>
-
+  </script>
 </body>
 
 </html>

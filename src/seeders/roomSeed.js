@@ -4,8 +4,9 @@ module.exports = {
       { id: 1, floor: 1 }, // Room category 1 is on floor 1
       { id: 2, floor: 2 }, // Room category 2 is on floor 2
       { id: 3, floor: 3 }, // Room category 3 is on floor 3
+      { id: 4, floor: 4 }, // Room category 3 is on floor 3
     ];
-    const roomsPerFloor = 10;
+    const roomsPerFloor = 15;
     const roomStatus = "Kích hoạt"; // Adjust this if you need to map it to a specific enum value
 
     let rooms = [];

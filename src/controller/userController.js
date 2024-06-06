@@ -85,26 +85,65 @@ let deleteUser = async (req, res) => {
     return res.redirect('/admin/user/userlist') 
 }
 let updateUser = async (req, res) => {
-    let id = req.params.id;
-    let { username, password, fullname, email, phone, role } = req.body;
-    try{
-        await db.User.update({
+    let { username, password, fullname, email, phone, role, createdAt } = req.body;
+
+    try {
+        // Check if the password is provided for update
+        let updateFields = {
             username: username,
-            password: password,
             fullname: fullname,
             email: email,
             phone: phone,
-            role: role
-        },{
+            role: role,
+            createdAt: createdAt
+        };
+
+        // Check if the password field is not empty
+        if (password) {
+            // If password is provided, generate hash
+            let salt = await bcryptjs.genSalt(10);
+            let hashPassword = await bcryptjs.hash(password, salt);
+            // Add hashed password to the update fields
+            updateFields.password = hashPassword;
+        }
+
+        // Find the user by id and update the fields
+        await db.User.update(updateFields, {
             where: {
-                id: id
+                id: req.params.id
             }
-        })
-    }catch (err) {
-        console.log(err)
+        });
+        
+        return res.redirect('/admin/user/userlist');
+    } catch (err) {
+        console.log(err);
+        req.flash('errors', 'Đã xảy ra lỗi trong quá trình cập nhật người dùng');
+        return res.redirect('/admin/user/userlist');
     }
-    return res.redirect('/admin/user/userlist')
-}
+};
+
+
+// let updateUser = async (req, res) => {
+//     let id = req.params.id;
+//     let { username, password, fullname, email, phone, role } = req.body;
+//     try{
+//         await db.User.update({
+//             username: username,
+//             password: password,
+//             fullname: fullname,
+//             email: email,
+//             phone: phone,
+//             role: role
+//         },{
+//             where: {
+//                 id: id
+//             }
+//         })
+//     }catch (err) {
+//         console.log(err)
+//     }
+//     return res.redirect('/admin/user/userlist')
+// }
 module.exports = {
     getUserList, createNewUser, deleteUser, getCreateUserPage, updateUser, getUpdateUserPage, checkEmailExist
 }

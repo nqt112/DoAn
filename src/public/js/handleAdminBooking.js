@@ -115,7 +115,7 @@ $(document).ready(function () {
           success: function (response) {
             if (response) {
               const bookingRow = $("#booking-" + bookingId);
-              bookingRow.find(".booking-status").text("Đã xác nhận");
+              bookingRow.find(".booking-status").text("Đã xác nhận").css("color", "blue");
               bookingRow.find(".postConfirmBooking").remove();
               bookingRow
                 .find(".actions")
@@ -124,6 +124,7 @@ $(document).ready(function () {
                     bookingId +
                     '">Checkin</button>'
                 );
+              alert(response)
               bindActions();
             } else {
               alert("Cập nhật trạng thái thất bại");
@@ -147,7 +148,7 @@ $(document).ready(function () {
           success: function (response) {
             if (response) {
               const bookingRow = $("#booking-" + bookingId);
-              bookingRow.find(".booking-status").text("Đã checkin");
+              bookingRow.find(".booking-status").text("Đã checkin").css("color", "green");
               bookingRow.find(".postCheckinBooking").remove();
               bookingRow
                 .find(".actions")
@@ -179,7 +180,7 @@ $(document).ready(function () {
           success: function (response) {
             if (response) {
               const bookingRow = $("#booking-" + bookingId);
-              bookingRow.find(".booking-status").text("Đã checkout");
+              bookingRow.find(".booking-status").text("Đã checkout").css("color", "orange");
               bookingRow.find(".postCheckoutBooking").remove();
               bookingRow.find(".postCancelBooking").remove();
               bindActions();
@@ -265,8 +266,10 @@ $(document).ready(function () {
             // Thêm các dòng khác tương ứng với các thuộc tính của phòng
             modalContent += "</tr>";
             total_booking_price = room.total_price;
+            bookingCode = room.Booking.code;
           });
           // Thêm nội dung vào modal
+          $("#bookingCode").html(bookingCode);
           $("#detail_room_list").html(modalContent);
           $("#total_booking_price").html(total_booking_price);
 
@@ -501,16 +504,15 @@ $(document).ready(function () {
           const bookingData = {
             services: [],
           };
-
           // Duyệt qua mỗi dịch vụ đã chọn
           selectedServices.forEach(function (service) {
             const serviceId = service.id;
             const quantity = service.quantity;
             const pricePerUnit = service.price; // Giá của mỗi đơn vị dịch vụ
-
+            
             // Tính giá của dịch vụ dựa trên số lượng
             const totalPriceForService = quantity * pricePerUnit;
-
+            
             // Thêm thông tin dịch vụ vào mảng services
             bookingData.services.push({
               bookingId: bookingId,
