@@ -40,6 +40,10 @@ initAdminRoutes(app);
 
 initWebRoutes(app);
 
+app.use((req, res) =>{
+  return res.render('404.ejs')
+})
+
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}`)
   })

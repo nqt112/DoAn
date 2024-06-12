@@ -1,4 +1,4 @@
-import adminController from '../controller/adminController';
+import loginController from "../controller/loginController";
 import userController from '../controller/userController';
 import categoryController from '../controller/categoryController';
 import roomController from '../controller/roomController';
@@ -32,6 +32,7 @@ const imageFilter = function(req, file, cb) {
 let upload = multer({ storage: storage, fileFilter: imageFilter });
 
 const initAdminRoutes = (app) => {
+    // router.use(loginController.checkLoggedIn);
     router.get('/',invoiceController.getOverviewPage)
     
     router.get('/user/userlist',userController.getUserList)
@@ -68,6 +69,9 @@ const initAdminRoutes = (app) => {
     router.post('/postCheckinBooking',bookingController.postCheckinBooking)
     router.post('/postCheckoutBooking',bookingController.postCheckoutBooking)
     router.post('/postCancelBooking',bookingController.postCancelBooking)
+
+    router.post('/api/saveBooking',bookingController.postOfflineBooking)
+
 
     router.get('/dayroom/dayroomlist',dayroomController.getDayroom)
     router.get('/api/dayRoomStatus',dayroomController.getAllRoomStatus)

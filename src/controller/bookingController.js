@@ -25,99 +25,119 @@ let transporter = nodemailer.createTransport({
   },
 });
 let getAdminBookingList = async (req, res) => {
+  let roomType = await db.Room_category.findAll({
+    attributes: ["id", "name"],
+    raw: true,
+    nest: true,
+  });
+  let serviceType = await db.Service.findAll({
+    attributes: ["id", "name"],
+    raw: true,
+    nest: true,
+  });
   return res.render("./booking/bookinglist", {
     bookingStatus: BookingStatusEnum,
+    roomType: roomType,
+    serviceType: serviceType,
   });
 };
 const getRoomBooking = async (req, res) => {
   let category = await db.Room_category.findAll({
-      raw: true,
-      nest: true,
+    raw: true,
+    nest: true,
   });
 
   const categoryList = category.map((booking) => {
-      return {
-          ...booking,
-          price: moneyFormat(booking.price),
-      };
+    return {
+      ...booking,
+      price: moneyFormat(booking.price),
+    };
   });
 
   // Call the getAvailableRooms API
   const { startDate, endDate } = req.query;
-  const availableRoomsResponse = await getAvailableRoomsInternal(startDate, endDate);
+  const availableRoomsResponse = await getAvailableRoomsInternal(
+    startDate,
+    endDate
+  );
 
   return res.render("./roomBooking.ejs", {
-      user: req.user,
-      categoryList,
-      availableRoomCounts: availableRoomsResponse.availableRoomCounts
+    user: req.user,
+    categoryList,
+    availableRoomCounts: availableRoomsResponse.availableRoomCounts,
   });
 };
 
 // Define an internal function to call getAvailableRooms
 const getAvailableRoomsInternal = async (startDate, endDate) => {
-  const dayRoomStatus = { CONTRONG: 'available' };  // Replace this with the actual status if needed
+  const dayRoomStatus = { CONTRONG: "available" }; // Replace this with the actual status if needed
 
   try {
-     const startDateISO = startDate ? moment(startDate).startOf('day').toISOString() : moment().startOf('day').toISOString();
-    const endDateISO = endDate ? moment(endDate).endOf('day').toISOString() : moment().endOf('day').toISOString();
+    const startDateISO = startDate
+      ? moment(startDate).startOf("day").toISOString()
+      : moment().startOf("day").toISOString();
+    const endDateISO = endDate
+      ? moment(endDate).endOf("day").toISOString()
+      : moment().endOf("day").toISOString();
 
-      const rooms = await db.Room.findAll();
+    const rooms = await db.Room.findAll();
 
-      const bookedRooms = await db.Day_room.findAll({
-          include: [
+    const bookedRooms = await db.Day_room.findAll({
+      include: [
+        {
+          model: db.Booking,
+          where: {
+            [Op.or]: [
               {
-                  model: db.Booking,
-                  where: {
-                      [Op.or]: [
-                          {
-                              checkIn: {
-                                  [Op.between]: [startDateISO, endDateISO]
-                              }
-                          },
-                          {
-                              checkOut: {
-                                  [Op.between]: [startDateISO, endDateISO]
-                              }
-                          },
-                          {
-                              checkIn: {
-                                  [Op.lte]: startDateISO
-                              },
-                              checkOut: {
-                                  [Op.gte]: endDateISO
-                              }
-                          }
-                      ]
-                  }
-              }
-          ],
-          raw: true,
-          nest: true,
-      });
+                checkIn: {
+                  [Op.between]: [startDateISO, endDateISO],
+                },
+              },
+              {
+                checkOut: {
+                  [Op.between]: [startDateISO, endDateISO],
+                },
+              },
+              {
+                checkIn: {
+                  [Op.lte]: startDateISO,
+                },
+                checkOut: {
+                  [Op.gte]: endDateISO,
+                },
+              },
+            ],
+          },
+        },
+      ],
+      raw: true,
+      nest: true,
+    });
 
-      const bookedRoomIds = bookedRooms.map(dayRoom => dayRoom.RoomId);
+    const bookedRoomIds = bookedRooms.map((dayRoom) => dayRoom.RoomId);
 
-      const availableRooms = rooms.filter(room => !bookedRoomIds.includes(room.id));
+    const availableRooms = rooms.filter(
+      (room) => !bookedRoomIds.includes(room.id)
+    );
 
-      const availableRoomCounts = availableRooms.reduce((counts, room) => {
-          if (!counts[room.roomCategoryId]) {
-              counts[room.roomCategoryId] = 0;
-          }
-          counts[room.roomCategoryId]++;
-          return counts;
-      }, {});
+    const availableRoomCounts = availableRooms.reduce((counts, room) => {
+      if (!counts[room.roomCategoryId]) {
+        counts[room.roomCategoryId] = 0;
+      }
+      counts[room.roomCategoryId]++;
+      return counts;
+    }, {});
 
-      return { availableRoomCounts };
+    return { availableRoomCounts };
   } catch (error) {
-      console.error(error);
-      return { availableRoomCounts: {} };
+    console.error(error);
+    return { availableRoomCounts: {} };
   }
 };
 
-
 let postRoomBooking = async (req, res, next) => {
-    const uuid = uuidv4();
-    const formattedUuid = uuid.substring(0, 13); // Remove hyphens and take the first 13 characters
+  const uuid = uuidv4();
+  const formattedUuid = uuid.substring(0, 13); // Remove hyphens and take the first 13 characters
   try {
     const body = req.body;
     const booking = await db.Booking.create({
@@ -253,6 +273,7 @@ let getBookingDetailPage = async (req, res) => {
     return res.render("./bookingDetail.ejs", {
       user: req.user,
       bookingList: bookingList,
+      bookingStatus: BookingStatusEnum,
     });
   } catch (error) {
     return res.json(error);
@@ -286,7 +307,7 @@ let getModalDetail = async (req, res) => {
         },
         {
           model: db.Booking,
-          attributes: ["id", "total_price", "code"],
+          attributes: ["id", "total_price", "code", "status"],
         },
       ],
       raw: true,
@@ -350,6 +371,10 @@ let getBookingServiceDetail = async (req, res) => {
         {
           model: db.Service,
           attributes: ["id", "name", "price"],
+        },
+        {
+          model: db.Booking,
+          attributes: ["id", "status"],
         },
       ],
       raw: true,
@@ -555,6 +580,181 @@ const postCancelBooking = async (req, res, next) => {
     return res.status(500).json({ error: "Cập nhật trạng thái thất bại" });
   }
 };
+// const postOfflineBooking = async (req, res, next) => {
+//   const { fullname, phone, email, checkIn, checkOut, rooms, services } =
+//     req.body;
+//   const uuid = uuidv4();
+//   const formattedUuid = uuid.substring(0, 13);
+
+//   try {
+//     // Lấy giá phòng từ cơ sở dữ liệu
+//     const roomPrices = await db.Room_category.findAll({
+//       attributes: ["id", "price"],
+//       raw: true,
+//       nest: true,
+//     });
+
+//     // Lấy giá dịch vụ từ cơ sở dữ liệu
+//     const servicePrices = await db.Service.findAll({
+//       attributes: ["id", "price"],
+//       raw: true,
+//       nest: true,
+//     });
+
+//     // Tính tổng số ngày thuê
+//     const checkInDate = new Date(checkIn);
+//     const checkOutDate = new Date(checkOut);
+//     const numberOfDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 3600 * 24));
+
+//     // Tính tổng tiền phòng
+//     let roomTotal = 0;
+//     rooms.forEach((room) => {
+//       const roomPrice = roomPrices.find((r) => r.id === room.id)?.price || 0;
+//       roomTotal += roomPrice * room.quantity * numberOfDays;
+//     });
+
+//     // Tính tổng tiền dịch vụ
+//     let serviceTotal = 0;
+//     services.forEach((service) => {
+//       const servicePrice = servicePrices.find((s) => s.id === service.id)?.price || 0;
+//       serviceTotal += servicePrice * service.quantity;
+//     });
+
+
+//     // Tạo đối tượng người đặt mới
+//     const user = await db.User.create({ fullname, phone, email, role: 1 });
+
+//     // Tạo đơn đặt mới
+//     const booking = await db.Booking.create({
+//       userId: user.id,
+//       code: formattedUuid,
+//       checkIn,
+//       checkOut,
+//       status: BookingStatusEnum.CONFIRM,
+//       total_price: roomTotal, // Lưu tổng tiền vào cơ sở dữ liệu
+//     });
+
+//     // Chuẩn bị dữ liệu cho bulkCreate
+//     const roomDetails = rooms.map((room) => ({
+//       bookingId: booking.id,
+//       roomCategoryId: room.id,
+//       quantity: room.quantity,
+//     }));
+//     const serviceDetails = services.map((service) => ({
+//       bookingId: booking.id,
+//       serviceId: service.id,
+//       quantity: service.quantity,
+//       total_price: ,
+//     }));
+
+//     // Sử dụng bulkCreate để lưu thông tin phòng và dịch vụ đặt vào cơ sở dữ liệu
+//     await db.Booking_detail.bulkCreate(roomDetails);
+//     await db.Booking_service.bulkCreate(serviceDetails);
+
+//     res
+//       .status(200)
+//       .json({
+//         message: "Đơn đặt đã được lưu thành công.",
+//         bookingId: booking.id,
+//       });
+//   } catch (error) {
+//     console.error("Lỗi khi lưu đơn đặt:", error);
+//     res.status(500).json({ error: "Đã xảy ra lỗi khi lưu đơn đặt." });
+//   }
+// };
+const postOfflineBooking = async (req, res, next) => {
+  const { fullname, phone, email, checkIn, checkOut, rooms, services } = req.body;
+  const uuid = uuidv4();
+  const formattedUuid = uuid.substring(0, 13);
+
+  try {
+    // Lấy giá phòng từ cơ sở dữ liệu
+    const roomPrices = await db.Room_category.findAll({
+      attributes: ["id", "price"],
+      raw: true,
+      nest: true,
+    });
+    console.log("roomPrices:", roomPrices); // Kiểm tra dữ liệu lấy từ cơ sở dữ liệu
+
+    // Lấy giá dịch vụ từ cơ sở dữ liệu
+    const servicePrices = await db.Service.findAll({
+      attributes: ["id", "price"],
+      raw: true,
+      nest: true,
+    });
+    console.log("servicePrices:", servicePrices); // Kiểm tra dữ liệu lấy từ cơ sở dữ liệu
+
+    // Tính tổng số ngày thuê
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const numberOfDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 3600 * 24));
+    console.log("numberOfDays:", numberOfDays); // Kiểm tra số ngày
+
+    // Tính tổng tiền phòng
+    let roomTotal = 0;
+    rooms.forEach((room) => {
+      const roomPrice = roomPrices.find((r) => r.id === parseInt(room.id))?.price || 0;
+      console.log(`Room ID: ${room.id}, Room Price: ${roomPrice}`); // Kiểm tra giá phòng tương ứng
+      roomTotal += roomPrice * room.quantity * numberOfDays;
+    });
+    console.log("roomTotal:", roomTotal); // Kiểm tra tổng tiền phòng
+
+    // Tính tổng tiền dịch vụ và chuẩn bị dữ liệu để lưu thông tin từng dịch vụ vào cơ sở dữ liệu
+    let totalServiceAmount = 0;
+    const serviceDetails = services.map((service) => {
+      const servicePrice = servicePrices.find((s) => s.id === parseInt(service.id))?.price || 0;
+      const serviceTotal = servicePrice * service.quantity;
+      console.log(`Service ID: ${service.id}, Service Price: ${servicePrice}, Service Total: ${serviceTotal}`); // Kiểm tra giá dịch vụ và tổng tiền
+      totalServiceAmount += serviceTotal;
+
+      return {
+        bookingId: null, // Placeholder for now, will set after creating booking
+        serviceId: service.id,
+        quantity: service.quantity,
+        total_price: serviceTotal, // Lưu tổng tiền của từng dịch vụ vào cơ sở dữ liệu
+      };
+    });
+    console.log("totalServiceAmount:", totalServiceAmount); // Kiểm tra tổng tiền dịch vụ
+
+    // Tạo đối tượng người đặt mới
+    const user = await db.User.create({ fullname, phone, email, role: 1 });
+
+    // Tạo đơn đặt mới với tổng tiền đã tính sẵn
+    const booking = await db.Booking.create({
+      userId: user.id,
+      code: formattedUuid,
+      checkIn,
+      checkOut,
+      status: BookingStatusEnum.CONFIRM,
+      total_price: roomTotal, // Tổng tiền phòng + tổng tiền dịch vụ
+    });
+    console.log("booking.total_price:", booking.total_price); // Kiểm tra tổng tiền của booking
+
+    // Chuẩn bị dữ liệu cho bulkCreate với bookingId
+    const roomDetails = rooms.map((room) => ({
+      bookingId: booking.id,
+      roomCategoryId: room.id,
+      quantity: room.quantity,
+    }));
+
+    serviceDetails.forEach((service) => {
+      service.bookingId = booking.id;
+    });
+
+    await db.Booking_detail.bulkCreate(roomDetails);
+    await db.Booking_service.bulkCreate(serviceDetails);
+
+    res.status(200).json({
+      message: "Đơn đặt đã được lưu thành công.",
+      bookingId: booking.id,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lưu đơn đặt:", error);
+    res.status(500).json({ error: "Đã xảy ra lỗi khi lưu đơn đặt." });
+  }
+};
+
+
 
 module.exports = {
   getRoomBooking,
@@ -571,4 +771,5 @@ module.exports = {
   postCheckoutBooking,
   getBookingListStatus,
   postCancelBooking,
+  postOfflineBooking,
 };

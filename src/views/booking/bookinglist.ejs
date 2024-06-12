@@ -12,7 +12,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <style>
-  <style>.status-wait {
+  .status-wait {
     color: gray;
   }
 
@@ -33,8 +33,6 @@
   }
 </style>
 
-</style>
-
 <body>
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
@@ -45,9 +43,10 @@
             <h3>Quản lý đơn đặt</h3>
             <div class="card">
               <div class="card-body">
-                <a href="/admin/service/createService">
-                  <button type="button" class="btn btn-outline-danger mb-1">Thêm mới</button>
-                </a>
+                <button type="button" class="btn btn-outline-danger mb-1" data-toggle="modal"
+                  data-target="#bookingModal">
+                  Yêu cầu đặt phòng
+                </button>
                 <div class="row mb-2">
                   <div class="col-md-2 mb-2">
                     <select class="form-select" id="statusFilter" name="status">
@@ -100,7 +99,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Thông tin đặt phòng </h5>
-                    
+
                     <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal"
                       aria-label="Close">
                     </button>
@@ -108,7 +107,8 @@
                   <div class="modal-body">
                     <section class="room-details-section spad">
                       <div class="container">
-                        <div class="d-flex justify-content-center"><h5>Mã đơn đặt: </h5> 
+                        <div class="d-flex justify-content-center">
+                          <h5>Mã đơn đặt: </h5>
                           <h5 class="ms-1" id="bookingCode"></h5>
                         </div>
                         <div class="row">
@@ -161,18 +161,140 @@
                         </div>
                       </div>
                       <div class="modal-footer" id="">
-                        
-                    </div>
+
+                      </div>
                     </section>
                   </div>
                 </div>
-               
+
               </div>
 
             </div>
 
+            <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalLabel">Tạo Đơn Đặt Phòng</h5>
+                    <button type="button" id="closeModalButton" class="btn-close" data-dismiss="modal"
+                      aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="bookingForm">
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="fullName">Họ và Tên:</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="phoneNumber">Số Điện Thoại:</label>
+                            <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-5">
+                          <div class="form-group" id="roomInputs">
+                            <label>Loại Phòng:</label>
+                            <select class="form-select" id="roomType" name="roomType" required>
+                              <!-- Options will be added dynamically -->
+                              <% roomType.map(function(room) { %>
+                                <option value="<%= room.id %>" data-name="<%= room.name %>">
+                                  <%= room.name %>
+                                </option>
+                                <% }) %>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="roomQuantity">Số Lượng:</label>
+                            <input type="number" class="form-control" id="roomQuantity" name="roomQuantity" required>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <button type="button" style="margin-top: 22px" class="btn btn-outline-info"
+                            onclick="addRoomInput()">Thêm Phòng</button>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="checkInTime">Check-in:</label>
+                            <input type="date" class="form-control dateInput" id="checkInTime" name="checkInTime" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="checkOutTime">Check-out:</label>
+                            <input type="date" class="form-control dateOutput" id="checkOutTime" name="checkOutTime" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-5">
+                          <div class="form-group" id="serviceInputs">
+                            <label>Dịch Vụ:</label>
+                            <select class="form-select" id="serviceName" name="serviceName" required>
+                              <!-- Options will be added dynamically -->
+                              <% serviceType.map(function(service) { %>
+                                <option value="<%= service.id %>" data-name="<%= service.name %>">
+                                  <%= service.name %>
+                                </option>
+                                <% }) %>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="serviceQuantity">Số Lượng:</label>
+                            <input type="number" class="form-control" id="serviceQuantity" name="serviceQuantity">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <button type="button" style="margin-top: 22px ;" class="btn btn-outline-info"
+                            onclick="addServiceInput()">Thêm dịch vụ</button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <h5>Các phòng đã chọn:</h5>
+                          <div id="selectedRooms">
+                            <!-- Các phòng đã chọn sẽ được thêm vào đây -->
+                          </div>
+                        </div>
+                        <div id="" class="col-md-6 mb-3">
+                          <h5>Các dịch vụ đã chọn:</h5>
+                          <div id="selectedServices">
+                            <!-- Các dịch vụ đã chọn sẽ được thêm vào đây -->
+                          </div>
+                        </div>
+                      </div>
+                      <div class=" d-flex justify-content-end">
+                        <button type="submit" class="btn btn-outline-dark">Tạo Đơn Đặt</button>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
           </div>
-          
+
       </div>
   </div>
 
@@ -181,30 +303,13 @@
   <script src="/js/sidebarmenu.js"></script>
   <script src="/js/app.min.js"></script>
   <script src="/libs/simplebar/dist/simplebar.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <script src="/js/handleAdminBooking.js"></script>
+  <script src="/js/handleOfflineBooking.js"></script>
 
-  <script src="/js/html2canvas.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-  <script>
-$(document).on("click", "#printInvoiceBtn", function () {
-    var bookingId = $(this).data("booking-id");
-
-    $.ajax({
-        url: "/admin/printInvoice/" + bookingId,
-        type: "GET",
-        success: function (response) {
-            alert(response);
-        },
-        error: function (xhr, status, error) {
-            console.error(error);
-            alert("Đã xảy ra lỗi trong quá trình in hóa đơn.");
-        }
-    });
-});
-
-  </script>
+ 
 
 </body>
 

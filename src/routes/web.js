@@ -77,31 +77,31 @@ const initWebRoutes = (app) => {
     
     router.post("/api/deleteService/:id",bookingController.postDeleteService)
 
-    // câu truy vấn test lấy ra dữ liệu booking cùng booking detail và các bảng liên quan.
-    router.get("/roomBooking/:id", async (req, res) => {
-        const id = req.params.id;
-        try {
-            const booking = await db.Booking.findByPk(id, {
-                include: [
-                    {
-                        model: db.Booking_detail,
-                        attributes: {
-                            exclude: ["bookingDetailId"],
-                        },
-                    },
-                    {
-                        model: db.User,
-                    },
-                ],
-                attributes: {
-                    exclude: ["bookingId"],
-                },
-            });
-            return res.json(booking);
-        } catch (error) {
-            return res.json(error);
-        }
-    });
+    // // câu truy vấn test lấy ra dữ liệu booking cùng booking detail và các bảng liên quan.
+    // router.get("/roomBooking/:id", async (req, res) => {
+    //     const id = req.params.id;
+    //     try {
+    //         const booking = await db.Booking.findByPk(id, {
+    //             include: [
+    //                 {
+    //                     model: db.Booking_detail,
+    //                     attributes: {
+    //                         exclude: ["bookingDetailId"],
+    //                     },
+    //                 },
+    //                 {
+    //                     model: db.User,
+    //                 },
+    //             ],
+    //             attributes: {
+    //                 exclude: ["bookingId"],
+    //             },
+    //         });
+    //         return res.json(booking);
+    //     } catch (error) {
+    //         return res.json(error);
+    //     }
+    // });
 
     return app.use("/", router);
 };

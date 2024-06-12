@@ -5,6 +5,7 @@ selectElement.style.display = "block";
 var selectElement = document.querySelector("div.nice-select");
 // Đặt thuộc tính style để ẩn phần tử
 selectElement.style.display = "none";
+
 const moneyFormat = (money) => {
   if (isNaN(money)) {
     return "0 ₫"; // Trả về giá trị mặc định nếu không phải là số
@@ -24,6 +25,14 @@ $(".detail-button").click(function () {
   // Lấy id của đơn đặt từ thuộc tính data-booking-id của nút "Chi tiết"
   var id = $(this).data("booking-id");
 
+  const BookingStatus = {
+    WAIT: "Chờ xác nhận",
+    CONFIRM: "Đã xác nhận",
+    CHECKIN: "Đã checkin",
+    CHECKOUT: "Đã checkout",
+    CANCEL: "Đã huỷ",
+  };
+
   // Gửi yêu cầu Ajax để lấy thông tin phòng tương ứng với đơn đặt
   $.ajax({
     url: "/bookingDetail/" + id, // Đường dẫn API hoặc route để lấy thông tin phòng
@@ -37,16 +46,20 @@ $(".detail-button").click(function () {
       response.forEach(function (room) {
         modalContent += "<tr>";
         modalContent += "<td>" + room.Room_category.name + "</td>";
-        modalContent += "<td>" + room.Room_category.numberOfPeople + "</td>";
+        modalContent +=
+          "<td>" + room.Room_category.numberOfPeople + "</td>";
         modalContent += "<td>" + room.price + "</td>";
         modalContent += "<td>" + room.quantity + "</td>";
         // Thêm các dòng khác tương ứng với các thuộc tính của phòng
         modalContent += "</tr>";
         total_booking_price = room.total_price;
+        bookingCode = room.Booking.code;
       });
       // Thêm nội dung vào modal
+      $("#bookingCode").html(bookingCode);
       $("#detail_room_list").html(modalContent);
       $("#total_booking_price").html(total_booking_price);
+      updateCombinedTotalPrice();
       // Mở modal
       // $("#exampleModal").modal("show");
     },
@@ -60,22 +73,34 @@ $(".detail-button").click(function () {
     type: "GET",
     success: function (response) {
       var modalContent = "";
-      var total_booking_price = 0;
+      var total_service_price = 0;
+      var bookingStatus = response[0]?.Booking.status;
 
       response.forEach(function (service) {
         modalContent += "<tr>";
         modalContent += "<td>" + service.Service.name + "</td>";
         modalContent += "<td>" + service.price + "</td>";
         modalContent += "<td>" + service.quantity + "</td>";
-        modalContent += "<td class='d-none pricePerService'>" + service.total_price + "</td>";
+        modalContent +=
+          "<td class='d-none pricePerService'>" +
+          service.total_price +
+          "</td>";
         modalContent += "<td>" + service.createdAt + "</td>";
-        modalContent += "<td><button type='button' class='btn btn-danger post-delete-service-btn' data-service-id='" + service.id + "'><i class='ti ti-trash'></i></button></td>";
+        if (bookingStatus !== BookingStatus.CHECKOUT) {
+          modalContent +=
+            "<td><button type='button' class='btn btn-danger post-delete-service-btn' data-service-id='" +
+            service.id +
+            "'><i class='ti ti-trash'></i></button></td>";
+        }else {
+          modalContent += "<td></td>";
+        }
         modalContent += "</tr>";
-        total_booking_price += service.total_price;
+        total_service_price += service.total_price;
       });
       $("#detail_service_list").html(modalContent); // Ensure you have a section to display service details
-      $("#total_service_price").html(moneyFormat(total_booking_price));
+      $("#total_service_price").html(moneyFormat(total_service_price));
       $("#exampleModal").modal("show");
+      updateCombinedTotalPrice();
     },
     error: function (xhr, status, error) {
       console.error(error);
@@ -83,8 +108,20 @@ $(".detail-button").click(function () {
     },
   });
 });
-function updateTotalBookingPrice(newTotalBookingPrice) {
-  $("#total_service_price").html(moneyFormat(newTotalBookingPrice));
+function updateCombinedTotalPrice() {
+  var totalBookingPriceText = $("#total_booking_price").text().replace(/[^\d]/g, '');
+  var totalServicePriceText = $("#total_service_price").text().replace(/[^\d]/g, '');
+
+  var totalBookingPrice = parseInt(totalBookingPriceText) || 0;
+  var totalServicePrice = parseInt(totalServicePriceText) || 0;
+
+  var combinedTotalPrice = totalBookingPrice + totalServicePrice;
+  $("#total_price").html(moneyFormat(combinedTotalPrice));
+}
+
+function updateTotalServicePrice(newTotalServicePrice) {
+  $("#total_service_price").html(moneyFormat(newTotalServicePrice));
+  updateCombinedTotalPrice();
 }
 $(document).on("click", ".post-delete-service-btn", async function () {
   var serviceId = $(this).data("service-id");
@@ -102,12 +139,12 @@ $(document).on("click", ".post-delete-service-btn", async function () {
         alert("Huỷ dịch vụ thành công!");
         // Xóa hàng đó khỏi DOM
         row.remove();
-        var currentTotalBookingPrice = parseFloat($("#total_service_price").text().replace(/\D/g, ''));
+        var currentTotalServicePrice = parseFloat($("#total_service_price").text().replace(/\D/g, ''));
         // Lấy giá trị dịch vụ vừa xoá
         var deletedServicePrice = parseFloat(row.find(".pricePerService").text().replace(/\D/g, ''));
         // Cập nhật lại tổng số tiền sau khi xoá dịch vụ
-        var newTotalBookingPrice = currentTotalBookingPrice - deletedServicePrice;
-        updateTotalBookingPrice(newTotalBookingPrice);
+        var newTotalServicePrice = currentTotalServicePrice - deletedServicePrice;
+        updateTotalServicePrice(newTotalServicePrice);
       }
       // Nếu người dùng bấm "Cancel", không thực hiện gì cả
     } else {
@@ -174,7 +211,33 @@ $(document).ready(function () {
       // Xử lý lỗi nếu cần
     },
   });
-
+  $(".postCancelBooking").on("click", function (event) {
+    event.preventDefault();
+    const bookingId = $(this).data("booking-id");
+    if (confirm("Bạn có chắc chắn muốn huỷ đơn đặt này không?")) {
+      $.ajax({
+        url: "/admin/postCancelBooking",
+        type: "POST",
+        data: { id: bookingId },
+        success: function (response) {
+          if (response) {
+            const bookingRow = $("#booking-" + bookingId);
+            // bookingRow.find(".booking-status").text("Đã huỷ");
+            // bookingRow.find(".postCancelBooking").remove();
+            // bookingRow.find(".openOrderServiceModal").remove();
+            // bookingRow.find(".postCheckoutBooking").remove();
+            location.reload();
+            // bindActions();
+          } else {
+            alert("Cập nhật trạng thái thất bại");
+          }
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
+    }
+  });
   // Mảng lưu trữ các dịch vụ đã chọn
   var selectedServices = [];
   //Xử lý sự kiện thêm
@@ -248,7 +311,6 @@ $(document).ready(function () {
     $("#total-amount").text(moneyFormat(totalAmount));
   }
 
-  // Sự kiện khi nút "Xác nhận đặt dịch vụ" được nhấn
   // Sự kiện khi nút "Xác nhận đặt dịch vụ" được nhấn
   $("#confirm-order-btn").click(async function () {
     try {

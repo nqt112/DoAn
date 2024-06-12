@@ -60,7 +60,12 @@ const moneyFormat = (money) => {
         }
     });
 }
-
+const updateTotalPriceModal = (total) => {
+    const totalPriceModals = document.querySelectorAll(".total-price-modal");
+    totalPriceModals.forEach((modal) => {
+        modal.innerHTML = moneyFormat(total);
+    });
+};
 const caculateTotal = () => {
     let total = 0;
 
@@ -78,7 +83,8 @@ const caculateTotal = () => {
     });
 
     totalPrice.innerHTML = moneyFormat(total);
-    totalPriceElement.innerHTML = moneyFormat(total);
+    // totalPriceElement.innerHTML = moneyFormat(total);
+    updateTotalPriceModal(total);
 };
 
 const createRoomSelectItem = (item, number) => {

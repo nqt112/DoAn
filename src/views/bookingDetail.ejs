@@ -27,7 +27,26 @@
     <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
 
 </head>
+<style>.status-wait {
+    color: gray;
+  }
 
+  .status-confirm {
+    color: blue;
+  }
+
+  .status-checkin {
+    color: green;
+  }
+
+  .status-checkout {
+    color: orange;
+  }
+
+  .status-cancel {
+    color: red;
+  }
+</style>
 <body>
 
     <!-- Header Section Begin -->
@@ -101,7 +120,14 @@
                             <td><%= item.checkIn %> </td>
                             <td><%= item.checkOut %> </td>
                             <td><%= item.createdAt %> </td>
-                            <td class=""><%= item.status %> </td>
+                            <td class="booking-status 
+                            <% if (item.status === bookingStatus.WAIT) { %> status-wait 
+                            <% } else if (item.status === bookingStatus.CONFIRM) { %> status-confirm 
+                            <% } else if (item.status === bookingStatus.CHECKIN) { %> status-checkin 
+                            <% } else if (item.status === bookingStatus.CHECKOUT) { %> status-checkout 
+                            <% } else if (item.status === bookingStatus.CANCEL) { %> status-cancel <% } %>">
+                            <%= item.status %>
+                          </td>
                             <td>
                                 <!-- <form class="mb-1 detail-form" action="/bookingDetail/<%= item.User.id%>/<%= item.id%>" method="GET">
                                 </form> -->
@@ -114,17 +140,22 @@
                                 
                               <form  class="mb-1"  action=""  method="GET">
                             </form>
-                            <div class="d-inline-block">
-                                <button type="button"  class="btn btn-outline-warning openOrderServiceModal" data-bs-toggle="modal"
-                                 data-booking-id="<%= item.id %>" data-bs-target="#order-service-modal">
-                                    ĐẶT DỊCH VỤ
-                                </button>
-                            </div>
+
+                               <% if (item.status === bookingStatus.CHECKOUT || item.status === bookingStatus.CANCEL ) { %>
+                                    <!-- Không hiển thị nút đặt dịch vụ -->
+                                    <button type="button" class="btn d-none btn-outline-warning openOrderServiceModal" data-bs-toggle="modal" data-booking-id="<%= item.id %>" data-bs-target="#order-service-modal">
+                                        ĐẶT DỊCH VỤ
+                                    </button>
+                                    <button type="submit" class=" d-none btn btn-outline-danger">HUỶ</button>
+                                <% } else { %>
+                                    <!-- Hiển thị nút đặt dịch vụ -->
+                                    <button type="button" class="btn btn-outline-warning openOrderServiceModal" data-bs-toggle="modal" data-booking-id="<%= item.id %>" data-bs-target="#order-service-modal">
+                                        ĐẶT DỊCH VỤ
+                                    </button>
+                                    <button type="button" class=" postCancelBooking btn btn-outline-danger" data-booking-id="<%= item.id %>">HUỶ</button>
+                                <% } %>
                           
-                              <form style="display: inline;" action="/admin/service/delete-service/<%= item.id%>"  method="POST">
-                                <button type="submit" class="btn btn-outline-danger">HUỶ</button>
-                                <!-- <input type="text" hidden value="<%= item.id%>" name="id" /> -->
-                              </form>
+                 
                             </td>
                           </tr>
                         <% }) %>

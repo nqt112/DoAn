@@ -83,7 +83,6 @@
                                 <label for="paymentMethod">Phương thức thanh toán:</label>
                                 <select class="form-select" id="paymentMethod">
                                     <option focus value="">Chọn phương thức thanh toán</option>
-                                    <option value="creditCard">Thẻ tín dụng</option>
                                     <option value="bankTransfer">Chuyển khoản ngân hàng</option>
                                     <option value="QR">Quét QR</option>
                                 </select>
@@ -170,37 +169,10 @@
     </section>
     <!-- Room Details Section End -->
     <!-- Payment Modal -->
-    <div class="modal fade" id="creditCardModal" tabindex="-1" aria-labelledby="creditCardModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <!-- Nội dung modal cho thanh toán bằng thẻ tín dụng -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="creditCardModalLabel">Thanh toán bằng thẻ tín dụng</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Các input cho thông tin thẻ tín dụng -->
-                    <label for="creditCardNumber">Số thẻ:</label>
-                    <input type="text" class="form-control" id="creditCardNumber">
-                    <label for="expirationDate">Ngày hết hạn:</label>
-                    <input type="text" class="form-control" id="expirationDate">
-                    <label for="cvv">CVV:</label>
-                    <input type="text" class="form-control" id="cvv">
-                </div>
-                <div style=" margin-right: 15px;" class="d-flex justify-content-end"  name="total_price">Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt phòng</button>
-                    <button type="button" class="confirmPaymentButton btn btn-primary">Xác nhận thanh toán</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal cho thanh toán bằng chuyển khoản ngân hàng -->
+     <div>
+        
+     </div>
     <div class="modal fade" id="bankTransferModal" tabindex="-1" aria-labelledby="bankTransferModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -219,7 +191,7 @@
                     <p>Ngân hàng: ACB</p>
                     
                 </div>
-                <div style=" margin-right: 15px;" class="d-flex justify-content-end"  name="total_price">Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
+                <div style=" margin-right: 15px;" class="d-flex justify-content-end">Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt phòng</button>
@@ -245,7 +217,7 @@
                     <!-- Hình ảnh QR code -->
                     <img src="qr_code.png" class="img-fluid" alt="QR Code">
                 </div>
-                <div style=" margin-right: 15px;" class="d-flex justify-content-end"  name="total_price">Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
+                <div style=" margin-right: 15px;" class="d-flex justify-content-end" >Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
                 <div class="modal-footer">
                     <button type="button" class=" btn btn-secondary" data-dismiss="modal">Đóng</button>
                     <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt phòng</button>

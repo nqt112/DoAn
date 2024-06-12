@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const bookedRooms = await fetchBookedRooms(bookingId);
           updateBookedRoomList(bookedRooms);
         } else {
-          alert('Booking not found');
+          alert('Không tìm thấy mã đơn đặt tương ứng!');
         }
       } catch (error) {
         console.error(error);

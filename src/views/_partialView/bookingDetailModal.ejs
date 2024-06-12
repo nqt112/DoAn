@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Thông tin đặt phòng</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Thông tin đặt phòng <div class="d-inline-block">[Mã đơn đặt: <span id="bookingCode"></span>]<div></h5>
         <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             <i class="ti ti-x"></i>
         </button>
@@ -58,8 +58,13 @@
                         </div> 
                     </div>
                 </div>
+                <div class="d-inline-block" >
+                    <h4 class="mb-2 mt-0 ">Tổng tiền đơn đặt: <span  id="total_price"></span></h4>
+                </div> 
             </div>
+            
         </section>
+    
         </div>
     </div>
     </div>
