@@ -44,7 +44,7 @@
                         <div class="nav-menu">
                             <nav class="mainmenu ">
                                 <ul>
-                                    <li class="active"><a href="./">Trang chủ</a></li>
+                                    <li class="active"><a href="/">Trang chủ</a></li>
                                     <li><a href="/roomBooking">Đặt phòng</a></li>
                                     
                                     <% if (user) { %>
@@ -71,7 +71,7 @@
     <!-- Header End -->
 
     <!-- Breadcrumb Section Begin -->
-    <div class="breadcrumb-section">
+    <div class="breadcrumb-section"  style="padding-top: 100px;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -139,41 +139,7 @@
                     </div>
                 </div>
                 <% }) %>
-<!-- 
-                <div class="col-lg-4">
-                    <div class="room-booking">
-                        <h3>Đặt phòng</h3>
-                        <form action="post">
-                            <div class="check-date">
-                                <label for="date-in">Check In:</label>
-                                <input type="text" class="date-input" name="checkin" id="date-in">
-                                <i class="icon_calendar"></i>
-                            </div>
-                            <div class="check-date">
-                                <label for="date-out">Check Out:</label>
-                                <input type="text" class="date-input" name="checkout" id="date-out">
-                                <i class="icon_calendar"></i>
-                            </div>
-                            <div class="select-option">
-                                <label for="guest">Số người:</label>
-                                <select id="guest" name="numberOfPeople">
-                                    <option value="2">2 người</option>
-                                    <option value="3">3 người</option>
-                                    <option value="4">4 người</option>
-                                    <option value="5">5 người</option>
-                                </select>
-                            </div>
-                            <div class="select-option">
-                                <label for="room">Phòng:</label>
-                                <select id="room">
-                                    <option value="">1 Phòng</option>
-                                </select>
-                            </div>
-                            <a href="/roomBooking"><button type="submit">Tìm phòng</button></a>
-                            
-                        </form>
-                    </div>
-                </div> -->
+
             </div>
         </div>
     </section>

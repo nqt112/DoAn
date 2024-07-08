@@ -473,7 +473,7 @@ ul, ol {
 	z-index: 5;
 }
 .hero-text {
-	padding-top: 145px;
+	padding-top: 130px;
 }
 .hero-text h1 {
 	font-size: 80px;
@@ -2311,3 +2311,114 @@ ul, ol {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.header-section {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #ffffff;
+	z-index: 1000;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section {
+	padding-top: 150px;
+	position: relative;
+	z-index: 0;
+}
+
+.img-item {
+	overflow: hidden;
+}
+
+.room-item img {
+	transition: transform 0.5s ease, opacity 0.5s ease;
+	display: block;
+}
+
+.room-item:hover img {
+	transform: scale(1.1);
+	opacity: 0.8;
+}
+
+.room-item {
+	min-width: 350px;
+}
+
+.rooms-section {
+	position: relative;
+}
+
+.hp-room-section {
+	padding-top: 80px;
+}
+
+.services-section {
+	border: none;
+}
+
+.owl-dots {
+	text-align: center;
+}
+
+.owl-dots .owl-dot {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background: #e54444;
+	margin: 0 5px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.owl-dots .owl-dot.active {
+	background: #dda707;
+}
+
+.owl-carousel button.owl-dot {
+	background: #e7ddc0;
+}
+
+        /* Font Lora */
+        @font-face {
+            font-family: 'Lora';
+            src: url('/fonts/Lora/Lora-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            src: url('/fonts/Lora/Lora-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Cabin';
+            src: url('/fonts/Cabin/Cabin-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Cabin';
+            src: url('/fonts/Cabin/Cabin-Medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Cabin';
+            src: url('/fonts/Cabin/Cabin-SemiBold.ttf') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Cabin';
+            src: url('/fonts/Cabin/Cabin-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }

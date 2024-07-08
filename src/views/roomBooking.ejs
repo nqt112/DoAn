@@ -63,7 +63,7 @@
     <!-- Header End -->
 
     <!-- Breadcrumb Section Begin -->
-    <div class="breadcrumb-section">
+    <div class="breadcrumb-section" style="padding-top: 100px;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -170,12 +170,12 @@
     <!-- Room Details Section End -->
     <!-- Payment Modal -->
     <!-- Modal cho thanh toán bằng chuyển khoản ngân hàng -->
-     <div>
-        
-     </div>
+    <div>
+
+    </div>
     <div class="modal fade" id="bankTransferModal" tabindex="-1" aria-labelledby="bankTransferModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <!-- Nội dung modal cho thanh toán bằng chuyển khoản ngân hàng -->
                 <div class="modal-header">
@@ -185,18 +185,22 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <!-- Luật khách sạn -->
+                    <p style="color: red; font-style: italic;text-decoration: underline;">Quý khách vui lòng tiền hành
+                        cọc 50% số tiền phòng để xác nhận đặt phòng, khách sạn xin cảm ơn!</p>
                     <!-- Nội dung chi tiết để chuyển khoản -->
                     <p>Vui lòng chuyển khoản vào tài khoản sau:</p>
                     <p>Số tài khoản: 123456789</p>
                     <p>Ngân hàng: ACB</p>
-                    
+                    <p>Người nhận: Nguyễn Văn A</p>
                 </div>
-                <div style=" margin-right: 15px;" class="d-flex justify-content-end">Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
+                <div style=" margin-right: 15px;  font-size: 19px" class="d-flex justify-content-end ">Tổng tiền cọc: <span
+                        style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt phòng</button>
-                    <button type="button" class="confirmPaymentButton btn btn-primary">Xác nhận thanh toán</button>
-
+                    <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt
+                        phòng</button>
+                    <button type="button" class="confirmPaymentButton btn btn-primary">Xác nhận đặt phòng</button>
                 </div>
             </div>
         </div>
@@ -204,7 +208,7 @@
 
     <!-- Modal cho thanh toán bằng QR code -->
     <div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <!-- Nội dung modal cho thanh toán bằng QR code -->
                 <div class="modal-header">
@@ -214,19 +218,24 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <!-- Luật khách sạn -->
+                    <p style="color: red; font-style: italic;text-decoration: underline;">Quý khách vui lòng tiền hành
+                        cọc 50% số tiền phòng để xác nhận đặt phòng, khách sạn xin cảm ơn!</p>
                     <!-- Hình ảnh QR code -->
-                    <img src="qr_code.png" class="img-fluid" alt="QR Code">
+                    <img src="/image/qrpay.jpg" class="img-fluid" alt="QR Code" style="width: 350px; height: 350px; margin-left: 58px;">
                 </div>
-                <div style=" margin-right: 15px;" class="d-flex justify-content-end" >Tổng tiền:  <span style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
+                <div style=" margin-right: 15px;  font-size: 19px" class="d-flex justify-content-end ">Tổng tiền cọc: <span
+                        style="color: #3db858; margin-left: 5px;" class="total-price-modal"></span></div>
                 <div class="modal-footer">
-                    <button type="button" class=" btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt phòng</button>
-                    <button type="button" class="confirmPaymentButton btn btn-primary">Xác nhận thanh toán</button>
-
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class=" cancelBooking btn btn-danger " data-dismiss="modal">Huỷ đặt
+                        phòng</button>
+                    <button type="button" class="confirmPaymentButton btn btn-primary">Xác nhận đặt phòng</button>
                 </div>
             </div>
         </div>
     </div>
+
 
 
     <!-- Footer Section Begin -->
@@ -243,7 +252,7 @@
         <script src="/js/owl.carousel.min.js"></script>
         <script src="/js/main.js"></script>
         <script src="/js/roomBooking.js"></script>
-    
+
 
 </body>
 

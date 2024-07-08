@@ -32,7 +32,7 @@ const imageFilter = function(req, file, cb) {
 let upload = multer({ storage: storage, fileFilter: imageFilter });
 
 const initAdminRoutes = (app) => {
-    // router.use(loginController.checkLoggedIn);
+    router.use(loginController.checkLoggedIn);
     router.get('/',invoiceController.getOverviewPage)
     
     router.get('/user/userlist',userController.getUserList)

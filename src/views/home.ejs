@@ -24,8 +24,9 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/tabler-icons/tabler-icons.css">
     <link rel="shortcut icon" type="image/png" href="/image/logos/favicon.png" />
-    
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
 </head>
 
 <body>
@@ -37,31 +38,26 @@
                     <div class="col-lg-2">
                         <div class="logo">
                             <a href="/">
-                                <image src="image/logo.png" class="" alt="">
+                                <img src="image/logo.png" class="" alt="">
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-7">
                         <div class="nav-menu">
-                            <nav class="mainmenu ">
+                            <nav class="mainmenu">
                                 <ul>
                                     <li class="active"><a href="./">Trang chủ</a></li>
                                     <li><a href="/roomBooking">Đặt phòng</a></li>
-                                    
+
                                     <% if (user) { %>
                                         <li><a href="/bookingDetail/">Đơn đặt</a></li>
-                                        <!-- Nếu đã đăng nhập, hiển thị nav tài khoản với user.id -->
                                         <li><a href="/userDetail/<%= user.id %>">Tài khoản</a></li>
-                                    <% } else { %>
-                                        <!-- Nếu chưa đăng nhập, chỉ hiển thị nav tài khoản -->
-                                        <li><a href="/bookingDetail">Đơn đặt</a></li>
-
-                                        <li><a href="/userDetail/">Tài khoản</a></li>
-                                    <% } %>
-                                    <li >
-                                    </li>
+                                        <% } else { %>
+                                            <li><a href="/bookingDetail">Đơn đặt</a></li>
+                                            <li><a href="/userDetail/">Tài khoản</a></li>
+                                            <% } %>
+                                                <li></li>
                                 </ul>
-                                
                             </nav>
                         </div>
                     </div>
@@ -70,21 +66,19 @@
         </div>
     </header>
     <!-- Header End -->
+
     <!-- Hero Section Begin -->
     <section class="hero-section">
         <div class="container">
-            
             <div class="row">
                 <div class="col-lg-6">
                     <div class="hero-text">
                         <h1>A Luxury Hotel</h1>
-                        <p>Here are the best hotel booking sites, including recommendations for international
-                            travel and for finding low-priced hotel rooms.</p>
+                        <p>Khách sạn HotelCom tự tin cung cấp đa dạng các loại phòng, dịch vụ đáp ứng mọi nhu cầu lưu
+                            trú của khách hàng.</p>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-5 offset-xl-2 offset-lg-1">
-                 
-                </div>
+                <div class="col-xl-4 col-lg-5 offset-xl-2 offset-lg-1"></div>
             </div>
         </div>
         <div class="hero-slider owl-carousel">
@@ -94,9 +88,112 @@
         </div>
     </section>
     <!-- Hero Section End -->
-   
-    <!-- Services Section End -->
-    <section class="services-section spad">
+    <!-- Hotel Description Section Begin -->
+    <section class="hotel-description-section" style="padding-top: 80px;">
+        <div class="container">
+            <div class="section-title">
+                <span>Chào mừng đến với khách sạn của chúng tôi</span>
+                <h2>Thông tin khách sạn</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div>
+                        <p><i class="ti ti-map-pin"></i> Địa chỉ: 99 Nguyễn Chí Thanh, Láng Lạ, Đống Đa, Hà Nội, Việt
+                            Nam</p>
+                        <p><i class="ti ti-phone"></i> Điện thoại: (+84) 3588115599</p>
+                        <p><i class="ti ti-mail"></i> Email: contact@hotelcom.vn</p>
+                    </div>
+                    <p style="line-style: 1.6; text-align: justify;">Khách sạn <strong>HotelCom</strong> của chúng tôi
+                        tọa lạc tại vị trí đắc địa, cung cấp các dịch vụ tiện ích và
+                        hiện đại,
+                        đảm bảo mang lại trải nghiệm tốt nhất cho khách hàng. Khách sạn <strong>HotelCom</strong> còn tự
+                        hào về không
+                        gian nghỉ ngơi tiện nghi và sang trọng, cùng với đội ngũ nhân viên chuyên nghiệp, luôn sẵn sàng
+                        phục vụ để đảm bảo mọi nhu cầu của quý khách được đáp ứng tối đa. Chúng tôi hy vọng rằng bạn sẽ
+                        có một kỳ nghỉ thư giãn và đáng nhớ tại <strong>HotelCom</strong>, nơi mà mọi chi tiết từ không
+                        gian sống đến
+                        dịch vụ đều được chăm chút tỉ mỉ để mang lại trải nghiệm tốt nhất cho quý khách hàng.</p>
+                </div>
+                <div class="col-xl-4 col-lg-4">
+                    <div class="map-container">
+                        <!-- Google Map Embed API will be added here -->
+                        <div id="map" style="width: 100%; height: 290px; border: 2px solid #747474;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hotel Description Section End -->
+
+    <!-- Room Section Begin -->
+    <section class="hp-room-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <span>Chúng tôi cung cấp</span>
+                        <h2>Danh sách loại phòng</h2>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <section class="rooms-section spad" style="padding-bottom: 50px;">
+                <div class="container">
+
+                    <div class="row owl-carousel room-slider">
+                        <% categoryList.forEach(function(item, index) { %>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="room-item">
+                                    <div class="img-item">
+                                        <img src="/image/uploadFile/<%= item.image %>" alt="" width="100" height="230">
+                                    </div>
+                                    <div class="ri-text">
+                                        <h4>
+                                            <%= item.name %>
+                                        </h4>
+                                        <h3>
+                                            <%= item.price %><span>/Đêm</span>
+                                        </h3>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="r-o">Diện tích:</td>
+                                                    <td>
+                                                        <%= item.square %> m²
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="r-o">Số người tối đa:</td>
+                                                    <td>
+                                                        <%= item.numberOfPeople %>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="r-o">Loại giường:</td>
+                                                    <td>
+                                                        <%= item.typeOfBed %>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <a href="/roomDetail/<%= item.id %>" target="_self" class="primary-btn">Chi tiết
+                                            phòng</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+    <!-- Room Section End -->
+
+    <!-- Services Section Begin -->
+    <section class="services-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -107,93 +204,88 @@
                 </div>
             </div>
             <div class="row">
-                <% service.forEach(function(item, index){ %>
-
-                <div class="col-lg-4 col-sm-6">
-                    <div class="service-item">
-                        <img src="/image/uploadFile/<%= item.image %>" alt="" style="border-radius: 5%;">
-
-                        <!-- <i class="flaticon-012-cocktail"></i> -->
-                        <h4><%= item.name %></h4>
-                        <p><%= item.description %></p>
-                    </div>
-                </div>
-                <% }) %>
-
-            </div>
-        </div>
-    </section>
-    <!-- Services Section End -->
-    <section class="hp-room-section">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <span>Chúng tôi cung cấp</span>
-                        <h2>Danh sách loại phòng</h2>
-                    </div>
-                </div>
-            </div>
-           
-            <section class="rooms-section spad">
-                <div class="container">
-                    <div class="row">
-                        <% categoryList.forEach(function(item, index){ %>
-                        <div class=" col-lg-4 col-md-6">
-                            <div class="room-item">
-                                <img src="/image/uploadFile/<%= item.image %>" alt="" width="100" height="200">
-                                <div class="ri-text">
-                                    <h4><%= item.name %></h4>
-                                    <h3><%= item.price %><span>/Đêm</span></h3>
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td class="r-o">Diện tích:</td>
-                                                <td><%= item.square %>  m²</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="r-o">Số người tối đa:</td>
-                                                <td><%= item.numberOfPeople %></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="r-o">Loại giường:</td>
-                                                <td><%= item.typeOfBed %></td>
-                                            </tr>
-                
-                                        </tbody>
-                                    </table>
-                                    <a href="/roomDetail/<%= item.id %>" target="_self" class="primary-btn">Chi tiết phòng</a>
-                                </div>
-                            </div>
+                <% service.forEach(function(item, index) { %>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="service-item">
+                            <img src="/image/uploadFile/<%= item.image %>" alt="" style="border-radius: 5%;">
+                            <h4>
+                                <%= item.name %>
+                            </h4>
+                            <p>
+                                <%= item.description %>
+                            </p>
                         </div>
+                    </div>
                     <% }) %>
-
-                    </div>
-                </div>
-            </section>
-        </div>
-    </section>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                    </div>
-                </div>
             </div>
         </div>
     </section>
+
+    <!-- Services Section End -->
+
     <!-- Footer Section Begin -->
     <%- include('./_partialView/footer.ejs') %>
-    <!-- Footer Section End -->
-    <!-- Js Plugins -->
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/jquery.slicknav.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/main.js"></script>
+        <!-- Footer Section End -->
+
+        <!-- Js Plugins -->
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.magnific-popup.min.js"></script>
+        <script src="js/jquery.nice-select.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery.slicknav.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
+        <script>
+            $(document).ready(function () {
+                var owl = $(".room-slider");
+                owl.owlCarousel({
+                    loop: false,
+                    margin: 20,
+                    nav: false,
+                    dots: true,
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+                        600: {
+                            items: 2
+                        },
+                        1000: {
+                            items: 3
+                        }
+                    }
+                });
+
+                $('.next').click(function () {
+                    owl.trigger('next.owl.carousel');
+                });
+
+                $('.prev').click(function () {
+                    owl.trigger('prev.owl.carousel', [300]);
+                });
+            });
+        </script>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1Ijoibmd1eWVudGh1aHVvbmcxOTg3IiwiYSI6ImNrb2Y4dXNlNTBqcmQzMXRyZXA3Yng2NDUifQ.VXut_atNnNAiiw5pi5PwDg';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [105.807347, 21.018013],
+                zoom: 12
+            });
+
+            // Add navigation control (zoom in, zoom out)
+            map.addControl(new mapboxgl.NavigationControl());
+
+            // Customize the marker
+            var marker = new mapboxgl.Marker({
+                color: "#FF5733" // Set marker color to red
+            })
+                .setLngLat([105.807347, 21.018013]) // Longitude, Latitude of your hotel
+                .addTo(map);
+        </script>
 </body>
 
 </html>

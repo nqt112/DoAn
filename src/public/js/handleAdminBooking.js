@@ -104,138 +104,140 @@ $(document).ready(function () {
   };
 
   const bindActions = () => {
-    $(document).off("click", ".postConfirmBooking");
-    $(document).off("click", ".postCheckinBooking");
-    $(document).off("click", ".postCheckoutBooking");
-    $(document).off("click", ".postCancelBooking");
+// Unbind existing event handlers
+$(document).off("click", ".postConfirmBooking");
+$(document).off("click", ".postCheckinBooking");
+$(document).off("click", ".postCheckoutBooking");
+$(document).off("click", ".postCancelBooking");
 
-    $(".postConfirmBooking").on("click", function (event) {
-      event.preventDefault();
-      const bookingId = $(this).data("booking-id");
-      if (confirm("Bạn có chắc chắn muốn xác nhận đơn đặt này không?")) {
+// Bind new event handlers
+$(document).on("click", ".postConfirmBooking", function (event) {
+    event.preventDefault();
+    const bookingId = $(this).data("booking-id");
+    if (confirm("Bạn có chắc chắn muốn xác nhận đơn đặt này không?")) {
         $.ajax({
-          url: "/admin/postConfirmBooking",
-          type: "POST",
-          data: { id: bookingId },
-          success: function (response) {
-            if (response) {
-              const bookingRow = $("#booking-" + bookingId);
-              bookingRow
-                .find(".booking-status")
-                .text("Đã xác nhận")
-                .css("color", "blue");
-              bookingRow.find(".postConfirmBooking").remove();
-              bookingRow
-                .find(".actions")
-                .prepend(
-                  '<button type="button" class="btn btn-outline-success text-uppercase ostCheckinBooking mb-1" data-booking-id="' +
-                    bookingId +
-                    '">Checkin</button>'
-                );
-              alert(response);
-              // bindActions();
-            } else {
-              alert("Cập nhật trạng thái thất bại");
-            }
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          },
+            url: "/admin/postConfirmBooking",
+            type: "POST",
+            data: { id: bookingId },
+            success: function (response) {
+                if (response) {
+                    const bookingRow = $("#booking-" + bookingId);
+                    bookingRow
+                        .find(".booking-status")
+                        .text("Đã xác nhận")
+                        .css("color", "blue");
+                    bookingRow.find(".postConfirmBooking").remove();
+                    bookingRow
+                        .find(".actions")
+                        .prepend(
+                            '<button type="button" class="btn btn-outline-success text-uppercase postCheckinBooking mb-1" data-booking-id="' +
+                            bookingId +
+                            '">Checkin</button>'
+                        );
+                    alert(response);
+                    bindActions();  // Re-bind actions after DOM update
+                } else {
+                    alert("Cập nhật trạng thái thất bại");
+                }
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            },
         });
-      }
-    });
+    }
+});
 
-    $(".postCheckinBooking").on("click", function (event) {
-      event.preventDefault();
-      const bookingId = $(this).data("booking-id");
-      if (confirm("Xác nhận checkin đơn đặt?")) {
+$(document).on("click", ".postCheckinBooking", function (event) {
+    event.preventDefault();
+    const bookingId = $(this).data("booking-id");
+    if (confirm("Xác nhận checkin đơn đặt?")) {
         $.ajax({
-          url: "/admin/postCheckinBooking",
-          type: "POST",
-          data: { id: bookingId },
-          success: function (response) {
-            if (response) {
-              const bookingRow = $("#booking-" + bookingId);
-              bookingRow
-                .find(".booking-status")
-                .text("Đã checkin")
-                .css("color", "green");
-              bookingRow.find(".postCheckinBooking").remove();
-              bookingRow
-                .find(".actions")
-                .prepend(
-                  '<button type="button" class="btn btn-outline-warning text-uppercase postCheckoutBooking mb-1" data-booking-id="' +
-                    bookingId +
-                    '">Checkout</button>'
-                );
-              // bindActions();
-            } else {
-              alert("Cập nhật trạng thái thất bại");
-            }
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          },
+            url: "/admin/postCheckinBooking",
+            type: "POST",
+            data: { id: bookingId },
+            success: function (response) {
+                if (response) {
+                    const bookingRow = $("#booking-" + bookingId);
+                    bookingRow
+                        .find(".booking-status")
+                        .text("Đã checkin")
+                        .css("color", "green");
+                    bookingRow.find(".postCheckinBooking").remove();
+                    bookingRow
+                        .find(".actions")
+                        .prepend(
+                            '<button type="button" class="btn btn-outline-warning text-uppercase postCheckoutBooking mb-1" data-booking-id="' +
+                            bookingId +
+                            '">Checkout</button>'
+                        );
+                    bindActions();  // Re-bind actions after DOM update
+                } else {
+                    alert("Cập nhật trạng thái thất bại");
+                }
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            },
         });
-      }
-    });
+    }
+});
 
-    $(".postCheckoutBooking").on("click", function (event) {
-      event.preventDefault();
-      const bookingId = $(this).data("booking-id");
-      if (confirm("Xác nhận checkout?")) {
+$(document).on("click", ".postCheckoutBooking", function (event) {
+    event.preventDefault();
+    const bookingId = $(this).data("booking-id");
+    if (confirm("Xác nhận checkout?")) {
         $.ajax({
-          url: "/admin/postCheckoutBooking",
-          type: "POST",
-          data: { id: bookingId },
-          success: function (response) {
-            if (response) {
-              const bookingRow = $("#booking-" + bookingId);
-              bookingRow
-                .find(".booking-status")
-                .text("Đã checkout")
-                .css("color", "orange");
-              bookingRow.find(".postCheckoutBooking").remove();
-              bookingRow.find(".postCancelBooking").remove();
-              // bindActions();
-            } else {
-              alert("Cập nhật trạng thái thất bại");
-            }
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          },
+            url: "/admin/postCheckoutBooking",
+            type: "POST",
+            data: { id: bookingId },
+            success: function (response) {
+                if (response) {
+                    const bookingRow = $("#booking-" + bookingId);
+                    bookingRow
+                        .find(".booking-status")
+                        .text("Đã checkout")
+                        .css("color", "orange");
+                    bookingRow.find(".postCheckoutBooking").remove();
+                    bookingRow.find(".postCancelBooking").remove();
+                    bindActions();  // Re-bind actions after DOM update
+                } else {
+                    alert("Cập nhật trạng thái thất bại");
+                }
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            },
         });
-      }
-    });
+    }
+});
 
-    $(".postCancelBooking").on("click", function (event) {
-      event.preventDefault();
-      const bookingId = $(this).data("booking-id");
-      if (confirm("Bạn có chắc chắn muốn huỷ đơn đặt này không?")) {
+$(document).on("click", ".postCancelBooking", function (event) {
+    event.preventDefault();
+    const bookingId = $(this).data("booking-id");
+    if (confirm("Bạn có chắc chắn muốn huỷ đơn đặt này không?")) {
         $.ajax({
-          url: "/admin/postCancelBooking",
-          type: "POST",
-          data: { id: bookingId },
-          success: function (response) {
-            if (response) {
-              const bookingRow = $("#booking-" + bookingId);
-              bookingRow.find(".booking-status").text("Đã huỷ").css("color", "red");
-              bookingRow.find(".postCancelBooking").remove();
-              bookingRow.find(".postCheckinBooking").remove();
-              bookingRow.find(".postCheckoutBooking").remove();
-
-              // bindActions();
-            } else {
-              alert("Cập nhật trạng thái thất bại");
-            }
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          },
+            url: "/admin/postCancelBooking",
+            type: "POST",
+            data: { id: bookingId },
+            success: function (response) {
+                if (response) {
+                    const bookingRow = $("#booking-" + bookingId);
+                    bookingRow.find(".booking-status").text("Đã huỷ").css("color", "red");
+                    bookingRow.find(".postCancelBooking").remove();
+                    bookingRow.find(".postCheckinBooking").remove();
+                    bookingRow.find(".postCheckoutBooking").remove();
+                    bindActions();  // Re-bind actions after DOM update
+                } else {
+                    alert("Cập nhật trạng thái thất bại");
+                }
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            },
         });
-      }
-    });
+    }
+});
+
     const moneyFormat = (money) => {
       if (isNaN(money)) {
         return "0 ₫"; // Trả về giá trị mặc định nếu không phải là số
@@ -252,137 +254,110 @@ $(document).ready(function () {
       $("#exampleModal").modal("hide");
     });
 
-    $(".detail-button").click(function () {
-      // Lấy id của đơn đặt từ thuộc tính data-booking-id của nút "Chi tiết"
-      var id = $(this).data("booking-id");
-      //     $(
-      //       "#insertPrintBtn"
-      //     ).html(`<button type="button" class="mb-1 btn btn-outline-primary " id="printInvoiceBtn" data-booking-id="${id}">
-      //   In hoá đơn
-      // </button>`);
-      const BookingStatus = {
-        WAIT: "Chờ xác nhận",
-        CONFIRM: "Đã xác nhận",
-        CHECKIN: "Đã checkin",
-        CHECKOUT: "Đã checkout",
-        CANCEL: "Đã huỷ",
-      };
-
-      // Gửi yêu cầu Ajax để lấy thông tin phòng tương ứng với đơn đặt
-      $.ajax({
-        url: "/bookingDetail/" + id, // Đường dẫn API hoặc route để lấy thông tin phòng
-        type: "GET",
-        success: function (response) {
-          // Xử lý phản hồi JSON từ server
-          // Ví dụ: giả sử phản hồi trả về một mảng các phòng, bạn có thể thêm chúng vào modal
-          var modalContent = "";
-          var total_booking_price = "";
-
-          response.forEach(function (room) {
-            modalContent += "<tr>";
-            modalContent += "<td>" + room.Room_category.name + "</td>";
-            modalContent +=
-              "<td>" + room.Room_category.numberOfPeople + "</td>";
-            modalContent += "<td>" + room.price + "</td>";
-            modalContent += "<td>" + room.quantity + "</td>";
-            // Thêm các dòng khác tương ứng với các thuộc tính của phòng
-            modalContent += "</tr>";
-            total_booking_price = room.total_price;
-            bookingCode = room.Booking.code;
-          });
-          // Thêm nội dung vào modal
-          $("#bookingCode").html(bookingCode);
-          $("#detail_room_list").html(modalContent);
-          $("#total_booking_price").html(total_booking_price);
-
-          // Mở modal
-          // $("#exampleModal").modal("show");
-        },
-        error: function (xhr, status, error) {
-          console.error(error);
-          // Xử lý lỗi nếu cần
-        },
+    $(document).ready(function () {
+      $(".detail-button").click(function () {
+        var id = $(this).data("booking-id");
+        const BookingStatus = {
+          WAIT: "Chờ xác nhận",
+          CONFIRM: "Đã xác nhận",
+          CHECKIN: "Đã checkin",
+          CHECKOUT: "Đã checkout",
+          CANCEL: "Đã huỷ",
+        };
+    
+        $.ajax({
+          url: "/bookingDetail/" + id,
+          type: "GET",
+          success: function (response) {
+            var modalContent = "";
+            var total_booking_price = "";
+    
+            response.forEach(function (room) {
+              modalContent += "<tr>";
+              modalContent += "<td>" + room.Room_category.name + "</td>";
+              modalContent += "<td>" + room.Room_category.numberOfPeople + "</td>";
+              modalContent += "<td>" + room.price + "</td>";
+              modalContent += "<td>" + room.quantity + "</td>";
+              modalContent += "</tr>";
+              total_booking_price = room.total_price;
+              bookingCode = room.Booking.code;
+            });
+    
+            $("#bookingCode").html(bookingCode);
+            $("#detail_room_list").html(modalContent);
+            $("#total_booking_price").html(total_booking_price);
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+          },
+        });
+    
+        $.ajax({
+          url: "/serviceDetail/" + id,
+          type: "GET",
+          success: function (response) {
+            var modalContent = "";
+            var total_booking_price = 0;
+            var bookingStatus = response[0]?.Booking.status;
+    
+            response.forEach(function (service) {
+              modalContent += "<tr>";
+              modalContent += "<td>" + service.Service.name + "</td>";
+              modalContent += "<td>" + service.price + "</td>";
+              modalContent += "<td>" + service.quantity + "</td>";
+              modalContent += "<td class='d-none pricePerService'>" + service.total_price + "</td>";
+              modalContent += "<td>" + service.createdAt + "</td>";
+              if (bookingStatus !== BookingStatus.CHECKOUT) {
+                modalContent += "<td><button type='button' class='btn btn-danger post-delete-service-btn' data-service-id='" + service.id + "'><i class='ti ti-trash'></i></button></td>";
+              } else {
+                modalContent += "<td></td>";
+              }
+              modalContent += "</tr>";
+              total_booking_price += service.total_price;
+            });
+    
+            $("#detail_service_list").html(modalContent);
+            $("#total_service_price").html(moneyFormat(total_booking_price));
+            $("#exampleModal").modal("show");
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+          },
+        });
       });
-      $.ajax({
-        url: "/serviceDetail/" + id,
-        type: "GET",
-        success: function (response) {
-          var modalContent = "";
-          var total_booking_price = 0;
-          var bookingStatus = response[0]?.Booking.status;
-
-          response.forEach(function (service) {
-            modalContent += "<tr>";
-            modalContent += "<td>" + service.Service.name + "</td>";
-            modalContent += "<td>" + service.price + "</td>";
-            modalContent += "<td>" + service.quantity + "</td>";
-            modalContent +=
-              "<td class='d-none pricePerService'>" +
-              service.total_price +
-              "</td>";
-            modalContent += "<td>" + service.createdAt + "</td>";
-            if (bookingStatus !== BookingStatus.CHECKOUT) {
-              modalContent +=
-                "<td><button type='button' class='btn btn-danger post-delete-service-btn' data-service-id='" +
-                service.id +
-                "'><i class='ti ti-trash'></i></button></td>";
-            }else {
-              modalContent += "<td></td>";
-            }
-            modalContent += "</tr>";
-            total_booking_price += service.total_price;
-          });
-          $("#detail_service_list").html(modalContent); // Ensure you have a section to display service details
-          $("#total_service_price").html(moneyFormat(total_booking_price));
-          $("#exampleModal").modal("show");
-        },
-        error: function (xhr, status, error) {
-          console.error(error);
-          // Xử lý lỗi nếu cần
-        },
-      });
-    });
-    function updateTotalBookingPrice(newTotalBookingPrice) {
-      $("#total_service_price").html(moneyFormat(newTotalBookingPrice));
-    }
-    $(document).on("click", ".post-delete-service-btn", async function () {
-      var serviceId = $(this).data("service-id");
-      var row = $(this).closest("tr");
-
-      // Hiển thị hộp thoại confirm
-      var confirmDelete = confirm("Bạn có chắc chắn huỷ dịch vụ không?");
-      // Nếu người dùng đồng ý xoá
-      if (confirmDelete) {
-        try {
-          const response = await fetch(`/api/deleteService/${serviceId}`, {
-            method: "POST",
-          });
-
-          if (response.ok) {
-            alert("Huỷ dịch vụ thành công!");
-            // Xóa hàng đó khỏi DOM
-            row.remove();
-            var currentTotalBookingPrice = parseFloat(
-              $("#total_service_price").text().replace(/\D/g, "")
-            );
-            // Lấy giá trị dịch vụ vừa xoá
-            var deletedServicePrice = parseFloat(
-              row.find(".pricePerService").text().replace(/\D/g, "")
-            );
-            // Cập nhật lại tổng số tiền sau khi xoá dịch vụ
-            var newTotalBookingPrice =
-              currentTotalBookingPrice - deletedServicePrice;
-            updateTotalBookingPrice(newTotalBookingPrice);
-          } else {
-            console.error("Xóa dịch vụ không thành công");
-          }
-        } catch (error) {
-          console.error(error);
-        }
+    
+      function updateTotalBookingPrice(newTotalBookingPrice) {
+        $("#total_service_price").html(moneyFormat(newTotalBookingPrice));
       }
-      // Nếu người dùng bấm "Cancel", không thực hiện gì cả
+    
+      $(document).off("click", ".post-delete-service-btn").on("click", ".post-delete-service-btn", async function () {
+        var serviceId = $(this).data("service-id");
+        var row = $(this).closest("tr");
+    
+        var confirmDelete = confirm("Bạn có chắc chắn huỷ dịch vụ không?");
+        if (confirmDelete) {
+          try {
+            const response = await fetch(`/api/deleteService/${serviceId}`, {
+              method: "POST",
+            });
+    
+            if (response.ok) {
+              alert("Huỷ dịch vụ thành công!");
+              row.remove();
+              var currentTotalBookingPrice = parseFloat($("#total_service_price").text().replace(/\D/g, ""));
+              var deletedServicePrice = parseFloat(row.find(".pricePerService").text().replace(/\D/g, ""));
+              var newTotalBookingPrice = currentTotalBookingPrice - deletedServicePrice;
+              updateTotalBookingPrice(newTotalBookingPrice);
+            } else {
+              console.error("Xóa dịch vụ không thành công");
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      });
     });
-
+    
     $(document).ready(function () {
       // Khai báo biến để lưu tổng số tiền
       var totalAmount = 0;
@@ -573,6 +548,11 @@ $(document).ready(function () {
       });
     });
   };
+// Call bindActions when document is ready
+$(document).ready(function () {
+  bindActions();
+});
+
 
   $("#statusFilter, #startDateFilter, #endDateFilter").on(
     "change",

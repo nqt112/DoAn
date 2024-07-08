@@ -63,7 +63,7 @@ const moneyFormat = (money) => {
 const updateTotalPriceModal = (total) => {
     const totalPriceModals = document.querySelectorAll(".total-price-modal");
     totalPriceModals.forEach((modal) => {
-        modal.innerHTML = moneyFormat(total);
+        modal.innerHTML = moneyFormat(total/2);
     });
 };
 const caculateTotal = () => {
